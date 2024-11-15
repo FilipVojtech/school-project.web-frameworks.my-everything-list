@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using My_Everything_List.Components;
+using Microsoft.EntityFrameworkCore;
+using My_Everything_List.Data;
 
 namespace My_Everything_List;
 
@@ -11,6 +14,22 @@ public class Program
         // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = "auth";
+                // options.Cookie.MaxAge = TimeSpan.FromHours(24);
+                options.LoginPath = "/login";
+                options.AccessDeniedPath = "/access-denied";
+            });
+        builder.Services.AddAuthorization();
+        builder.Services.AddCascadingAuthenticationState();
+        builder.Services.AddDbContext<My_Everything_ListContext>(options =>
+            options.UseSqlite(builder.Configuration.GetConnectionString("My_Everything_ListContext") ??
+                              throw new InvalidOperationException(
+                                  "Connection string 'My_Everything_ListContext' not found.")
+            )
+        );
 
         var app = builder.Build();
 
@@ -26,6 +45,8 @@ public class Program
 
         app.UseStaticFiles();
         app.UseAntiforgery();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
