@@ -14,10 +14,10 @@
 </p>
 
 <QuickGrid Class="table" Items="context.Film">
-    <PropertyColumn Property="film => film.Title" />
-    <PropertyColumn Property="film => film.ReleaseDate" />
-    <PropertyColumn Property="film => film.Genre" />
-    <PropertyColumn Property="film => film.Price" />
+    <PropertyColumn Property="film => film.Title"/>
+    <PropertyColumn Property="film => film.ReleaseDate"/>
+    <PropertyColumn Property="film => film.Genre"/>
+    <PropertyColumn Property="film => film.Price"/>
 
     <TemplateColumn Context="film">
         <a href="@($"films/edit?id={film.Id}")">Edit</a> |
