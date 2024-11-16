@@ -1,0 +1,104 @@
+﻿@page "/films/edit"
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Models
+@inject IDbContextFactory<My_Everything_List.Data.My_Everything_ListContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Film</h2>
+<hr />
+@if (Film is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Film" OnValidSubmit="UpdateFilm" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Film.Id" value="@Film.Id" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <InputText id="title" @bind-Value="Film.Title" class="form-control" />
+                    <ValidationMessage For="() => Film.Title" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="releasedate" class="form-label">ReleaseDate:</label>
+                    <InputDate id="releasedate" @bind-Value="Film.ReleaseDate" class="form-control" />
+                    <ValidationMessage For="() => Film.ReleaseDate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="genre" class="form-label">Genre:</label>
+                    <InputText id="genre" @bind-Value="Film.Genre" class="form-control" />
+                    <ValidationMessage For="() => Film.Genre" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <InputNumber id="price" @bind-Value="Film.Price" class="form-control" />
+                    <ValidationMessage For="() => Film.Price" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/films">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Film? Film { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Film ??= await context.Film.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Film is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateFilm()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Film!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!FilmExists(Film!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/films");
+    }
+
+    private bool FilmExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Film.Any(e => e.Id == id);
+    }
+}

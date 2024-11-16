@@ -1,0 +1,52 @@
+﻿@page "/films/details"
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Models
+@inject IDbContextFactory<My_Everything_List.Data.My_Everything_ListContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Film</h2>
+    <hr />
+    @if (film is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@film.Title</dd>
+            <dt class="col-sm-2">ReleaseDate</dt>
+            <dd class="col-sm-10">@film.ReleaseDate</dd>
+            <dt class="col-sm-2">Genre</dt>
+            <dd class="col-sm-10">@film.Genre</dd>
+            <dt class="col-sm-2">Price</dt>
+            <dd class="col-sm-10">@film.Price</dd>
+        </dl>
+        <div>
+            <a href="@($"/films/edit?id={film.Id}")">Edit</a> |
+            <a href="@($"/films")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Film? film;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        film = await context.Film.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (film is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

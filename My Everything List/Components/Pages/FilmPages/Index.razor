@@ -1,0 +1,39 @@
+﻿@page "/films"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using My_Everything_List.Models
+@using My_Everything_List.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<My_Everything_List.Data.My_Everything_ListContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="films/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Film">
+    <PropertyColumn Property="film => film.Title" />
+    <PropertyColumn Property="film => film.ReleaseDate" />
+    <PropertyColumn Property="film => film.Genre" />
+    <PropertyColumn Property="film => film.Price" />
+
+    <TemplateColumn Context="film">
+        <a href="@($"films/edit?id={film.Id}")">Edit</a> |
+        <a href="@($"films/details?id={film.Id}")">Details</a> |
+        <a href="@($"films/delete?id={film.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private My_Everything_ListContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

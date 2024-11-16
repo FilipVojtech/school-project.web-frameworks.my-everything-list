@@ -1,0 +1,59 @@
+﻿@page "/films/create"
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Models
+@inject IDbContextFactory<My_Everything_List.Data.My_Everything_ListContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Film</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Film" OnValidSubmit="AddFilm" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="Film.Title" class="form-control" /> 
+                <ValidationMessage For="() => Film.Title" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="releasedate" class="form-label">ReleaseDate:</label> 
+                <InputDate id="releasedate" @bind-Value="Film.ReleaseDate" class="form-control" /> 
+                <ValidationMessage For="() => Film.ReleaseDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="genre" class="form-label">Genre:</label> 
+                <InputText id="genre" @bind-Value="Film.Genre" class="form-control" /> 
+                <ValidationMessage For="() => Film.Genre" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="price" class="form-label">Price:</label> 
+                <InputNumber id="price" @bind-Value="Film.Price" class="form-control" /> 
+                <ValidationMessage For="() => Film.Price" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/films">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Film Film { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddFilm()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Film.Add(Film);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/films");
+    }
+}
