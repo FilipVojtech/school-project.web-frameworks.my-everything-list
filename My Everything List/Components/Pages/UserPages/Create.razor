@@ -1,7 +1,8 @@
 ﻿@page "/users/create"
 @using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
 @using My_Everything_List.Models
-@inject IDbContextFactory<My_Everything_List.Data.MyEverythingListContext> DbFactory
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject NavigationManager NavigationManager
 
 <PageTitle>Create</PageTitle>
@@ -9,27 +10,32 @@
 <h1>Create</h1>
 
 <h2>User</h2>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="User" OnValidSubmit="AddUser" FormName="create" Enhance>
-            <DataAnnotationsValidator />
+            <DataAnnotationsValidator/>
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="email" class="form-label">Email:</label> 
-                <InputText id="email" @bind-Value="User.Email" class="form-control" /> 
-                <ValidationMessage For="() => User.Email" class="text-danger" /> 
-            </div>        
+                <label for="email" class="form-label">Email:</label>
+                <InputText id="email" @bind-Value="User.Email" class="form-control"/>
+                <ValidationMessage For="() => User.Email" class="text-danger"/>
+            </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password:</label> 
-                <InputText id="password" @bind-Value="User.Password" class="form-control" /> 
-                <ValidationMessage For="() => User.Password" class="text-danger" /> 
-            </div>        
+                <label for="password" class="form-label">Password:</label>
+                <InputText id="password" @bind-Value="User.Password" class="form-control"/>
+                <ValidationMessage For="() => User.Password" class="text-danger"/>
+            </div>
             <div class="mb-3">
-                <label for="role" class="form-label">Role:</label> 
-                <InputText id="role" @bind-Value="User.Role" class="form-control" /> 
-                <ValidationMessage For="() => User.Role" class="text-danger" /> 
-            </div>        
+                <label for="role" class="form-label">Role:</label>
+                <InputSelect id="role" @bind-Value="User.Role" class="form-control">
+                    @foreach (User.UserRole role in Enum.GetValues(typeof(User.UserRole)))
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => User.Role" class="text-danger"/>
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -40,8 +46,7 @@
 </div>
 
 @code {
-    [SupplyParameterFromForm]
-    private User User { get; set; } = new();
+    [SupplyParameterFromForm] private User User { get; set; } = new();
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddUser()
