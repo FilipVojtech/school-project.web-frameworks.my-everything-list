@@ -9,7 +9,7 @@ public class User
     [Key]
     [Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [Column("email")]
     [DataType(DataType.EmailAddress)]
