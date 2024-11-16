@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using My_Everything_List.Components;
 using Microsoft.EntityFrameworkCore;
 using My_Everything_List.Data;
@@ -30,6 +30,8 @@ public class Program
                                   "Connection string 'My_Everything_ListContext' not found.")
             )
         );
+        builder.Services.AddQuickGridEntityFrameworkAdapter();
+        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         var app = builder.Build();
 
@@ -39,6 +41,8 @@ public class Program
             app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
+            // todo: Monitor if being in the if-block causes any issues
+            app.UseMigrationsEndPoint();
         }
 
         app.UseHttpsRedirection();
