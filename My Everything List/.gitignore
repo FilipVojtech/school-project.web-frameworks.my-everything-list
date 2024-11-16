@@ -8,6 +8,9 @@ nupkg/
 # Visual Studio Code
 .vscode
 
+# Big boi Visual Studio
+.vs
+
 # User-specific files
 *.suo
 *.user
