@@ -11,7 +11,7 @@ using My_Everything_List.Data;
 namespace MyEverythingList.Migrations
 {
     [DbContext(typeof(MyEverythingListContext))]
-    [Migration("20241116131815_Initial")]
+    [Migration("20241116170347_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

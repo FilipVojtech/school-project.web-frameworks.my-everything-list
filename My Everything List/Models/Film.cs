@@ -6,7 +6,11 @@ namespace My_Everything_List.Models;
 [Table("film")]
 public class Film
 {
-    [Column("id")] public int Id { get; set; }
+    [Key]
+    [Column("id")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
     [Column("title")] public string? Title { get; set; }
     [Column("release_date")] public DateOnly ReleaseDate { get; set; }
     [Column("genre")] public string? Genre { get; set; }
