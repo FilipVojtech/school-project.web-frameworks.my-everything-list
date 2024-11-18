@@ -1,0 +1,26 @@
+<ul>
+    <li><a href="/">Home</a></li>
+    <AuthorizeView>
+        <Authorized>
+            <li><a href="/search">Search</a></li>
+            <li><a href="/settings">Settings</a></li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/films">Films</a></li>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Admin,User">
+        <Authorized>
+            <li><a href="/logout">Logout</a></li>
+        </Authorized>
+        <NotAuthorized>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        </NotAuthorized>
+    </AuthorizeView>
+</ul>
