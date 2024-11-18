@@ -1,0 +1,55 @@
+﻿@page "/users/details"
+@attribute [Authorize(Roles = "Admin")]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
+
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>User</h2>
+    <hr/>
+    @if (user is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@user.Email</dd>
+            <dt class="col-sm-2">Password</dt>
+            <dd class="col-sm-10">@user.Password</dd>
+            <dt class="col-sm-2">Role</dt>
+            <dd class="col-sm-10">@user.Role</dd>
+        </dl>
+        <div>
+            <a href="@($"/users/edit?id={user.Id}")">Edit</a> |
+            <a href="@($"/users")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private User? user;
+
+    [SupplyParameterFromQuery] private int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        user = await context.User.FirstOrDefaultAsync(m => m.Id == id);
+
+        if (user is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
