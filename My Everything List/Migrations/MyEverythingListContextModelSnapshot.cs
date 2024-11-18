@@ -60,8 +60,8 @@ namespace MyEverythingList.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("password");
 
-                    b.Property<int?>("Role")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT")
                         .HasColumnName("role");
 
                     b.HasKey("Id");

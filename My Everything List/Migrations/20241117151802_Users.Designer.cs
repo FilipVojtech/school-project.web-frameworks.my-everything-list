@@ -11,7 +11,7 @@ using My_Everything_List.Data;
 namespace MyEverythingList.Migrations
 {
     [DbContext(typeof(MyEverythingListContext))]
-    [Migration("20241116173921_Users")]
+    [Migration("20241117151802_Users")]
     partial class Users
     {
         /// <inheritdoc />
@@ -63,8 +63,8 @@ namespace MyEverythingList.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("password");
 
-                    b.Property<int?>("Role")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT")
                         .HasColumnName("role");
 
                     b.HasKey("Id");

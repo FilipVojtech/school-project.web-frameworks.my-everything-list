@@ -18,7 +18,7 @@ namespace MyEverythingList.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     email = table.Column<string>(type: "TEXT", nullable: true),
                     password = table.Column<string>(type: "TEXT", nullable: true),
-                    role = table.Column<int>(type: "INTEGER", nullable: true)
+                    role = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
