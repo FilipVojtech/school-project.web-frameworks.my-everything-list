@@ -1,8 +1,12 @@
 ﻿@page "/films"
+@implements IAsyncDisposable
+@attribute [Authorize(Roles = "Admin")]
+
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using My_Everything_List.Data
-@implements IAsyncDisposable
+
 @inject IDbContextFactory<MyEverythingListContext> DbFactory
 
 <PageTitle>Index</PageTitle>
