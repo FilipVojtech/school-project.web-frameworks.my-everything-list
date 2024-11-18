@@ -1,26 +1,46 @@
-<ul>
-    <li><a href="/">Home</a></li>
-    <AuthorizeView>
-        <Authorized>
-            <li><a href="/search">Search</a></li>
-            <li><a href="/settings">Settings</a></li>
-        </Authorized>
-    </AuthorizeView>
-
-    <AuthorizeView Roles="Admin">
-        <Authorized>
-            <li><a href="/users">Users</a></li>
-            <li><a href="/films">Films</a></li>
-        </Authorized>
-    </AuthorizeView>
-
-    <AuthorizeView Roles="Admin,User">
-        <Authorized>
-            <li><a href="/logout">Logout</a></li>
-        </Authorized>
-        <NotAuthorized>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
-        </NotAuthorized>
-    </AuthorizeView>
-</ul>
+<aside class="bb-sidebar" style="--bb-sidebar-width: 270px">
+    <div class="bb-sidebar-top-row navbar">
+        <div class="container-fluid ps-3">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <span class="navbar-brand-text fw-semibold expanded-only me-2">My Everything List</span>
+            </a>
+        </div>
+    </div>
+    @*
+    HACK: Couldn't use the Sidebar component without major issues
+            Copied the structure that the component builds
+            Also copied the scoped CSS that the components use and added it all in one scoped CSS file
+            Refferenced code: https://github.com/vikramlearning/blazorbootstrap/blob/main/blazorbootstrap/Components/Sidebar/Sidebar.razor
+    *@
+    <div class="bb-sidebar-content nav-scrollable bb-scrollbar">
+        <nav class="flex-column">
+            <SidebarItem
+                Text="Home"
+                Href="/"
+                Match="NavLinkMatch.All"
+            />
+            <AuthorizeView>
+                <Authorized>
+                    <SidebarItem Text="Settings" Href="/settings"/>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    @*
+                    Hack: Allow rendermode Server in just this place to allow showing/hiding the section
+                    *@
+                    <NavAdminSection/>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView>
+                <Authorized>
+                    <SidebarItem Text="Logout" Href="/logout"/>
+                </Authorized>
+                <NotAuthorized>
+                    <SidebarItem Text="Login" Href="/login"/>
+                    <SidebarItem Text="Register" Href="/register"/>
+                </NotAuthorized>
+            </AuthorizeView>
+        </nav>
+    </div>
+</aside>

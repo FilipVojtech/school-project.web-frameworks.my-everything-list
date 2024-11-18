@@ -1,0 +1,17 @@
+@rendermode InteractiveServer
+
+<SidebarItem
+    Text="Admin Section"
+    ChildItems="_adminItems"
+    HasChilds="true"
+/>
+
+@code {
+
+    private IEnumerable<NavItem> _adminItems =
+    [
+        new() { Href = "/users", Text = "Users", ParentId = "31" },
+        new() { Href = "/films", Text = "Films", ParentId = "31" }
+    ];
+
+}
