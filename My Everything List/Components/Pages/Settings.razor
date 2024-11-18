@@ -1,8 +1,17 @@
 @page "/settings"
+
 @rendermode InteractiveServer
+
+@inject IUserService UserService
 
 <PageTitle>Settings</PageTitle>
 <h3>Settings</h3>
 <ul>
     <SettingsItem Title="Delete Account" OnClickCallback="DeleteAccount"/>
 </ul>
+
+@{
+    <p>@UserService.GetId().Result</p>
+    <p>@UserService.GetEmail().Result</p>
+    <p>@UserService.GetRole().Result</p>
+}
