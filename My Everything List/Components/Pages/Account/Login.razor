@@ -1,0 +1,65 @@
+@page "/login"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using My_Everything_List.Data
+@using My_Everything_List.Models.ViewModels
+
+@inject MyEverythingListContext DbContext
+@inject NavigationManager Navigation
+
+<PageTitle>Login</PageTitle>
+
+<h3>Login</h3>
+
+<EditForm Model="Model" OnValidSubmit="Authenticate" FormName="LoginForm">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div>
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="Model.Email" class="form-control"/>
+        <ValidationMessage For="() => Model.Email" class="text-danger"/>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <InputText @bind-Value="Model.Password" type="password" class="form-control"/>
+        <ValidationMessage For="() => Model.Password" class="text-danger"/>
+    </div>
+    <div>
+        <span class="text=danger">@_errorMessage</span>
+    </div>
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    [CascadingParameter] public HttpContext? HttpContext { get; set; }
+    [SupplyParameterFromForm] public LoginViewModel Model { get; set; } = new();
+
+    private string? _errorMessage = string.Empty;
+
+    private async Task Authenticate()
+    {
+        var userAccount = DbContext.User.FirstOrDefault(user => user.Email == Model.Email);
+        if (userAccount == null || userAccount.Password != Model.Password)
+        {
+            _errorMessage = "Incorrect credentials.";
+            return;
+        }
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, userAccount.Id.ToString()),
+            new(ClaimTypes.Email, Model.Email),
+            new(ClaimTypes.Role, userAccount.Role)
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+        await HttpContext.SignInAsync(principal);
+        Navigation.NavigateTo("/");
+    }
+
+}
