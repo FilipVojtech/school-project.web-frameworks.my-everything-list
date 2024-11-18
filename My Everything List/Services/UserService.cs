@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server;
+using My_Everything_List.Models;
 
 namespace My_Everything_List;
 
@@ -13,6 +13,16 @@ public class UserService : IUserService
     }
 
     // TODO: Ask how to make this a property (ie. without async)
+    public async Task<User?> GetUser()
+    {
+        return new User
+        {
+            Id = await GetId() ?? -1,
+            Email = await GetEmail(),
+            Role = await GetRole(),
+        };
+    }
+
     public async Task<int?> GetId()
     {
         var user = (await _asp.GetAuthenticationStateAsync()).User;
