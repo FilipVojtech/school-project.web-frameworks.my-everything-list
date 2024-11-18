@@ -6,12 +6,10 @@ namespace My_Everything_List;
 public class UserService : IUserService
 {
     private readonly AuthenticationStateProvider _asp;
-    private readonly ServerAuthenticationStateProvider _sasp;
 
-    public UserService(AuthenticationStateProvider asp, ServerAuthenticationStateProvider sasp)
+    public UserService(AuthenticationStateProvider asp)
     {
         _asp = asp;
-        _sasp = sasp;
     }
 
     // TODO: Ask how to make this a property (ie. without async)
