@@ -1,7 +1,10 @@
 ﻿@page "/users/create"
+@rendermode InteractiveServer
+
 @using Microsoft.EntityFrameworkCore
 @using My_Everything_List.Data
 @using My_Everything_List.Models
+
 @inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject NavigationManager NavigationManager
 
@@ -29,10 +32,8 @@
             <div class="mb-3">
                 <label for="role" class="form-label">Role:</label>
                 <InputSelect id="role" @bind-Value="User.Role" class="form-control">
-                    @foreach (User.UserRole role in Enum.GetValues(typeof(User.UserRole)))
-                    {
-                        <option value="@role">@role</option>
-                    }
+                    <option value="User">User</option>
+                    <option value="Admin">Administrator</option>
                 </InputSelect>
                 <ValidationMessage For="() => User.Role" class="text-danger"/>
             </div>
