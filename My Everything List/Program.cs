@@ -41,6 +41,9 @@ public class Program
 
         builder.Services.AddScoped<IUserService, UserService>();
 
+        // Bootstrap
+        builder.Services.AddBlazorBootstrap();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
