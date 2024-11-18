@@ -11,7 +11,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -20,6 +19,7 @@ public class Program
                 options.LoginPath = "/login";
                 options.AccessDeniedPath = "/access-denied";
             });
+
         builder.Services.AddAuthorization();
 
         builder.Services.AddCascadingAuthenticationState();
@@ -38,6 +38,8 @@ public class Program
         // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
+
+        builder.Services.AddScoped<IUserService, UserService>();
 
         var app = builder.Build();
 
