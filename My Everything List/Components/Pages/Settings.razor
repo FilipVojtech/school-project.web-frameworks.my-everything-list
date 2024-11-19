@@ -12,8 +12,21 @@
     <SettingsItem Title="Delete Account" OnClickCallback="DeleteAccount"/>
 </ul>
 
-@{
-    <p>@UserService.GetId().Result</p>
-    <p>@UserService.GetEmail().Result</p>
-    <p>@UserService.GetRole().Result</p>
+<p>@_id</p>
+<p>@_email</p>
+<p>@_role</p>
+
+@code {
+    private int? _id;
+    private string? _email;
+    private string? _role;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _id = await UserService.GetId();
+        _email = await UserService.GetEmail();
+        _role = await UserService.GetRole();
+    }
 }
