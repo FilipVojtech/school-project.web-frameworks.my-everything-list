@@ -15,11 +15,11 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
                     </li>
                     <AuthorizeView Roles="User,Admin">
                         <Authorized>
-                            @* <li class="nav-item"><a class="nav-link" href="#">SomeItem</a></li> *@
+                            @* <li class="nav-item"><NavLink class="nav-link" href="#">SomeItem</a></li> *@
                         </Authorized>
                     </AuthorizeView>
                     <AuthorizeView Roles="Admin">
@@ -50,8 +50,8 @@
                             </li>
                         </Authorized>
                         <NotAuthorized>
-                            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/login">Register</a></li>
+                            <li class="nav-item"><NavLink class="nav-link" href="/login">Login</NavLink></li>
+                            <li class="nav-item"><NavLink class="nav-link" href="/register">Register</NavLink></li>
                         </NotAuthorized>
                     </AuthorizeView>
                 </ul>
