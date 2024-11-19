@@ -11,28 +11,31 @@
 
 <PageTitle>Login</PageTitle>
 
-<h3>Login</h3>
+<div>
+    <h3 class="text-center">Login</h3>
 
-<EditForm Model="Model" OnValidSubmit="Authenticate" FormName="LoginForm">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
-    <div>
-        <label for="email">Email:</label>
-        <InputText id="email" @bind-Value="Model.Email" class="form-control"/>
-        <ValidationMessage For="() => Model.Email" class="text-danger"/>
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <InputText @bind-Value="Model.Password" type="password" class="form-control"/>
-        <ValidationMessage For="() => Model.Password" class="text-danger"/>
-    </div>
-    <div>
-        <span class="text=danger">@_errorMessage</span>
-    </div>
-    <div>
-        <button type="submit">Login</button>
-    </div>
-</EditForm>
+    <EditForm Model="Model" OnValidSubmit="Authenticate" FormName="LoginForm">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div class="form-floating mb-3">
+            <InputText id="email" @bind-Value="Model.Email" type="email" class="form-control" placeholder=""/>
+            <label for="email">Email</label>
+            <ValidationMessage For="() => Model.Email" class="text-danger"/>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText id="password" @bind-Value="Model.Password" type="password" class="form-control" placeholder=""/>
+            <label for="password">Password</label>
+            <ValidationMessage For="() => Model.Password" class="text-danger"/>
+        </div>
+        <div>
+            <span class="text=danger">@_errorMessage</span>
+        </div>
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Login</button>
+        </div>
+    </EditForm>
+</div>
+
 
 @code {
     [CascadingParameter] public HttpContext? HttpContext { get; set; }
