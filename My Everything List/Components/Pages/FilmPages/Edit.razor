@@ -1,4 +1,5 @@
-﻿@page "/films/edit"
+﻿@page "/admin/films/edit"
+@rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
 
 @using Microsoft.AspNetCore.Authorization
@@ -96,7 +97,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/films");
+        NavigationManager.NavigateTo("/admin/films");
     }
 
     private bool FilmExists(int id)
