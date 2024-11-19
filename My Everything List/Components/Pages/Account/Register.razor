@@ -1,5 +1,7 @@
 @page "/register"
+@rendermode InteractiveServer
 
+@using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
@@ -12,26 +14,38 @@
 
 <PageTitle>Register</PageTitle>
 
-<h3>Register</h3>
+<div>
+    <h3 class="text-center mb-3">Register</h3>
 
-<EditForm Model="@Model" OnValidSubmit="RegisterUser" FormName="register-form">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
-    <div>
-        <label for="email">Email:</label>
-        <InputText id="email" @bind-Value="Model.Email" type="email" class="form-control"/>
-        <ValidationMessage For="() => Model.Email" class="text-danger"/>
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <InputText id="password" @bind-Value="Model.Password" type="password" class="form-control"/>
-        <ValidationMessage For="() => Model.Password" class="text-danger"/>
-    </div>
-    <div><span class="text-danger">@_errorMessage</span></div>
-    <div>
-        <button type="submit">Register</button>
-    </div>
-</EditForm>
+    <EditForm Model="@Model" OnValidSubmit="RegisterUser" FormName="register-form" Enhance>
+        <DataAnnotationsValidator/>
+        <div class="form-floating mb-2">
+            <InputText id="email" @bind-Value="Model.Email" type="email" class="form-control" placeholder=""/>
+            <label for="email">Email</label>
+            <ValidationMessage For="() => Model.Email" class="text-danger"/>
+        </div>
+        <div class="form-floating mb-2">
+            <InputText id="password" @bind-Value="Model.Password" type="password" class="form-control" placeholder=""/>
+            <label for="password">Password</label>
+            @{
+                var validationResult = new List<ValidationResult>();
+                var ctx = new ValidationContext(Model) { MemberName = nameof(Model.Password) };
+                Validator.TryValidateProperty(Model.Password, ctx, validationResult);
+            }
+            <div class="text-danger">
+                @foreach (var result in validationResult)
+                {
+                    @(new MarkupString(result.ErrorMessage ?? string.Empty))
+                    <br/>
+                }
+            </div>
+        </div>
+        <div class="mb-2"><span class="text-danger">@_errorMessage</span></div>
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Register</button>
+        </div>
+    </EditForm>
+</div>
 
 @code {
     [CascadingParameter] public HttpContext HttpContext { get; set; }
