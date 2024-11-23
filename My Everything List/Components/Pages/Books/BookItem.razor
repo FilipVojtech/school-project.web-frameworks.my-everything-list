@@ -1,0 +1,40 @@
+<Card Id="@Id" class="film-item user-select-none cursor-pointer interactive" @onclick="OnClick">
+    <CardBody class="d-flex">
+        <div class="me-3">
+            @if (Image != null)
+            {
+                var imageAltText = $"{Title} by {AuthorsText} book cover";
+
+                <img src="@Image" alt="@imageAltText" class="book-item-cover"/>
+            }
+            else
+            {
+                <div class="cover-placeholder bg-body-secondary d-flex align-items-center justify-content-center">
+                    <span class="fs-6 fw-bold text-center">No<br>book<br/>cover</span>
+                </div>
+            }
+        </div>
+        <div>
+            <CardTitle>@Title</CardTitle>
+            <CardSubTitle>
+                @AuthorsText <br>
+                @Isbn
+            </CardSubTitle>
+            <CardText>@Description</CardText>
+        </div>
+    </CardBody>
+</Card>
+
+@code {
+
+    [Parameter] public required string Id { get; set; }
+    [Parameter] public required string Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public required string[] Authors { get; set; }
+    [Parameter] public string? Image { get; set; }
+    [Parameter] public string? Isbn { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    private string AuthorsText => Authors?.Aggregate(string.Empty, (current, author) => current + $"{author}, ")[..^2] ?? "No author(s)";
+
+}

@@ -2,6 +2,7 @@
 using My_Everything_List.Components;
 using Microsoft.EntityFrameworkCore;
 using My_Everything_List.Data;
+using My_Everything_List.Services.GoogleBooksService;
 using My_Everything_List.Services.TmdbService;
 using My_Everything_List.Services.UserService;
 
@@ -46,6 +47,7 @@ public class Program
         builder.Services.AddSingleton<ITmdbService, TmdbService>(_ =>
             new TmdbService(builder.Configuration.GetConnectionString("TmdbApiKey") ??
                             throw new InvalidOperationException("Connection TmdbApiKey not found.")));
+        builder.Services.AddSingleton<IGoogleBooksService, GoogleBooksService>();
 
         // Bootstrap
         builder.Services.AddBlazorBootstrap();

@@ -1,20 +1,20 @@
 using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using My_Everything_List.Services.TmdbService;
+using My_Everything_List.Services.GoogleBooksService;
 
-namespace My_Everything_List.Components.Pages.Films;
+namespace My_Everything_List.Components.Pages.Books;
 
-public partial class SearchMovieModal
+public partial class SearchBookModal
 {
-    [Inject] private ITmdbService TmdbService { get; set; } = default!;
+    [Inject] private IGoogleBooksService BooksService { get; set; } = default!;
 
     [Parameter] public required string ButtonTitle { get; set; }
-    [Parameter] public required EventHandler<Film> OnItemSelected { get; set; }
+    [Parameter] public required EventHandler<Volume> OnItemSelected { get; set; }
     private string? Query { get; set; } = string.Empty;
     private Modal _modal = default!;
     private bool _searching = false;
-    private FilmSearchResult? _films = null;
+    private BookSearchResult? _books = null;
     private Task _searchTimeout = Task.CompletedTask;
     private CancellationTokenSource _tokenSource = new();
 
@@ -48,22 +48,22 @@ public partial class SearchMovieModal
         await Task.Run(async () =>
         {
             ct.ThrowIfCancellationRequested();
-            _films = null;
+            _books = null;
             _searching = true;
 
             // Wait for 1250 ms before searching
             await Task.Delay(1250, ct);
 
-            _films = await TmdbService.SearchFilm(Query);
+            _books = await BooksService.Search(Query);
             _searching = false;
         }, ct);
     }
 
-    private void OnFilmClick(MouseEventArgs args, Film film)
+    private void OnBookClick(MouseEventArgs args, Volume book)
     {
-        OnItemSelected(null, film);
+        OnItemSelected(null, book);
         Query = string.Empty;
-        _films = null;
+        _books = null;
         _modal.HideAsync();
     }
 }

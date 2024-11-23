@@ -1,0 +1,9 @@
+.book-item-cover {
+    width: 100px;
+    object-fit: cover;
+}
+
+.cover-placeholder {
+    width: 100px;
+    height: 150px;
+}
