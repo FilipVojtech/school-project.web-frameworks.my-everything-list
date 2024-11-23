@@ -3,7 +3,10 @@
 
 @using My_Everything_List.Services.TmdbService
 
-<h3>Films</h3>
+<div class="container-fluid d-flex justify-content-between">
+    <h3>Films</h3>
+    <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
+</div>
 
 <ul>
     @foreach (var film in _films)
@@ -11,8 +14,6 @@
         <li>@film.title</li>
     }
 </ul>
-
-<SearchMovieModal OnItemSelected="OnItemSelected"/>
 
 @code {
     private List<Film> _films = [];
