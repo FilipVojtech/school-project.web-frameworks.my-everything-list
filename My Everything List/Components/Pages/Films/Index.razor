@@ -1,6 +1,8 @@
 @page "/films"
 @rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin,User")]
 
+@using Microsoft.AspNetCore.Authorization
 @using My_Everything_List.Services.TmdbService
 
 <div class="container-fluid d-flex justify-content-between">
