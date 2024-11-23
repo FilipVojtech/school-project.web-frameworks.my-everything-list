@@ -1,0 +1,59 @@
+@rendermode InteractiveServer
+
+<h3>Search</h3>
+<Button Color="ButtonColor.Primary" @onclick="ShowModal">Search Movies</Button>
+
+<Modal @ref="_modal" Title="Search">
+    <BodyTemplate>
+        <form class="form-floating mb-3">
+            <div class="input-group">
+                <span class="input-group-text"><Icon Name="IconName.Search"/></span>
+                <div class="form-floating">
+                    <InputText
+                        @bind-Value="Query"
+                        id="movieSearch"
+                        name="movieSearch"
+                        class="form-control"
+                        placeholder=""
+                        type="search"
+                        autocomplete="off"
+                        @oninput="args => OnInputHandler((string?)args.Value)"
+                    />
+                    <label for="movieSearch">Movie title</label>
+                </div>
+            </div>
+        </form>
+        @if (_searching)
+        {
+            <div class="d-flex justify-content-center">
+                <Spinner/>
+            </div>
+        }
+        else if (_films != null)
+        {
+            if (_films.results.Length > 0)
+            {
+                <div class="search-results d-flex flex-column gap-2">
+                    @foreach (var film in _films.results)
+                    {
+                        DateOnly.TryParse(film.release_date, out var releaseDate);
+
+                        <FilmItem
+                            Id="@film.id"
+                            Title="@film.original_title"
+                            Description="@film.overview"
+                            Genres="@film.genres"
+                            Image="@film.poster_path"
+                            ReleaseDate="releaseDate"
+                            OnClick="args => OnFilmClick(args, film)"
+                        />
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Could not find any films</p>
+            }
+        }
+    </BodyTemplate>
+</Modal>
