@@ -2,6 +2,7 @@
 using My_Everything_List.Components;
 using Microsoft.EntityFrameworkCore;
 using My_Everything_List.Data;
+using My_Everything_List.Services.UserService;
 
 namespace My_Everything_List;
 
@@ -39,6 +40,7 @@ public class Program
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
+        // Services
         builder.Services.AddScoped<IUserService, UserService>();
 
         // Bootstrap

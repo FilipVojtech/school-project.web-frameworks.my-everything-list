@@ -1,6 +1,6 @@
 using My_Everything_List.Models;
 
-namespace My_Everything_List;
+namespace My_Everything_List.Services.UserService;
 
 public interface IUserService
 {
