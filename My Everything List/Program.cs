@@ -2,6 +2,7 @@
 using My_Everything_List.Components;
 using Microsoft.EntityFrameworkCore;
 using My_Everything_List.Data;
+using My_Everything_List.Services.TmdbService;
 using My_Everything_List.Services.UserService;
 
 namespace My_Everything_List;
@@ -42,6 +43,9 @@ public class Program
 
         // Services
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddSingleton<ITmdbService, TmdbService>(_ =>
+            new TmdbService(builder.Configuration.GetConnectionString("TmdbApiKey") ??
+                            throw new InvalidOperationException("Connection TmdbApiKey not found.")));
 
         // Bootstrap
         builder.Services.AddBlazorBootstrap();
