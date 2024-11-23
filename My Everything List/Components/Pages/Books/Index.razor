@@ -1,6 +1,9 @@
 @page "/books"
-@using My_Everything_List.Services.GoogleBooksService
 @rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin,User")]
+
+@using Microsoft.AspNetCore.Authorization
+@using My_Everything_List.Services.GoogleBooksService
 
 <div class="container-fluid d-flex justify-content-between">
     <h3>Books</h3>
