@@ -1,0 +1,37 @@
+@using My_Everything_List.Services.TmdbService
+@inject ITmdbService TmdbService
+@rendermode InteractiveServer
+
+<Card Id="@Id.ToString()" class="film-item user-select-none cursor-pointer interactive" @onclick="OnClick">
+    <CardBody class="d-flex">
+        <div class="me-3">
+            @if (Image != null)
+            {
+                var imageAltText = ReleaseDate != DateOnly.MinValue ? $"{Title} ({ReleaseDate.Year}) poster" : $"{Title} poster";
+
+                <img src="@TmdbService.ConstructImageUrl(Image)" alt="@imageAltText" class="film-item-poster"/>
+            }
+            else
+            {
+                <div class="poster-placeholder bg-body-secondary d-flex align-items-center justify-content-center">
+                    <span
+                        class="fs-6 fw-bold text-center">No<br>poster</span></div>
+            }
+        </div>
+        <div>
+            <CardTitle>@Title</CardTitle>
+            <CardSubTitle>@ReleaseDate.ToString()</CardSubTitle>
+            <CardText>@Description</CardText>
+        </div>
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter] public required int Id { get; set; }
+    [Parameter] public required string Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string? Image { get; set; }
+    [Parameter] public DateOnly ReleaseDate { get; set; }
+    [Parameter] public Genre[]? Genres { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+}
