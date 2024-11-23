@@ -1,4 +1,4 @@
-﻿@page "/films/delete"
+﻿@page "/admin/films/delete"
 @attribute [Authorize(Roles = "Admin")]
 
 @using Microsoft.AspNetCore.Authorization
@@ -42,7 +42,7 @@
         <EditForm method="post" Model="film" OnValidSubmit="DeleteFilm" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(film is null)">Delete</button>
             |
-            <a href="/films">Back to List</a>
+            <a href="/admin/films">Back to List</a>
         </EditForm>
     }
 </div>
@@ -68,7 +68,7 @@
         using var context = DbFactory.CreateDbContext();
         context.Film.Remove(film!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/films");
+        NavigationManager.NavigateTo("/admin/films");
     }
 
 }

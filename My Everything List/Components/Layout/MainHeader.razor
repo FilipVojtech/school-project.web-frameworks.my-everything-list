@@ -1,0 +1,70 @@
+<header class="sticky-top mb-2">
+    <nav class="navbar navbar-expand-md bg-body-tertiary">
+        <div class="container-sm">
+            <a
+                class="navbar-brand mb-0 fs-4"
+                style="font-family: 'RoostLightA', sans-serif; user-select: none"
+                href="/"
+            >
+                MyEverythingList
+            </a>
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+                    </li>
+                    <AuthorizeView>
+                        <Authorized>
+                            <li class="nav-item"><NavLink class="nav-link" href="/films">Films</NavLink></li>
+                            <li class="nav-item"><NavLink class="nav-link" href="/books">Books</NavLink></li>
+                            <li class="nav-item"><NavLink class="nav-link" href="/songs">Songs</NavLink></li>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Admin Section
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/users">Users</a></li>
+                                    <li><a class="dropdown-item" href="/admin/films">Films</a></li>
+                                </ul>
+                            </li>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView>
+                        <Authorized>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Account
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/settings">Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        </Authorized>
+                        <NotAuthorized>
+                            <li class="nav-item"><NavLink class="nav-link" href="/login">Login</NavLink></li>
+                            <li class="nav-item"><NavLink class="nav-link" href="/register">Register</NavLink></li>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

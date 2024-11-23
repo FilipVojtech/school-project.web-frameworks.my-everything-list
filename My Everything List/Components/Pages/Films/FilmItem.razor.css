@@ -1,0 +1,9 @@
+.film-item-poster {
+    width: 100px;
+    object-fit: cover;
+}
+
+.poster-placeholder {
+    width: 100px;
+    height: 150px;
+}

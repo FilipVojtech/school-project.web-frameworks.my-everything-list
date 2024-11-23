@@ -1,4 +1,4 @@
-﻿@page "/films"
+﻿@page "/admin/films"
 @implements IAsyncDisposable
 @attribute [Authorize(Roles = "Admin")]
 
@@ -14,7 +14,7 @@
 <h1>Index</h1>
 
 <p>
-    <a href="films/create">Create New</a>
+    <a href="admin/films/create">Create New</a>
 </p>
 
 <QuickGrid Class="table" Items="context.Film">
@@ -24,9 +24,9 @@
     <PropertyColumn Property="film => film.Price"/>
 
     <TemplateColumn Context="film">
-        <a href="@($"films/edit?id={film.Id}")">Edit</a> |
-        <a href="@($"films/details?id={film.Id}")">Details</a> |
-        <a href="@($"films/delete?id={film.Id}")">Delete</a>
+        <a href="@($"admin/films/edit?id={film.Id}")">Edit</a> |
+        <a href="@($"admin/films/details?id={film.Id}")">Details</a> |
+        <a href="@($"admin/films/delete?id={film.Id}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
 

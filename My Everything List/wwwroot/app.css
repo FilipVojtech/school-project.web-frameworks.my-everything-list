@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'RoostLightA';
+    src: url('/fonts/RoostLightA.ttf.woff') format('woff'),
+    url('/fonts/RoostLightA.ttf.svg#RoostLightA') format('svg'),
+    url('/fonts/RoostLightA.ttf.eot'),
+    url('/fonts/RoostLightA.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 h1:focus {
     outline: none;
 }
@@ -20,10 +30,18 @@ h1:focus {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.interactive:hover {
+    background-color: #e4e4e4;
 }

@@ -1,0 +1,29 @@
+@page "/books"
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin,User")]
+
+@using Microsoft.AspNetCore.Authorization
+@using My_Everything_List.Services.GoogleBooksService
+
+<div class="container-fluid d-flex justify-content-between">
+    <h3>Books</h3>
+    <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
+</div>
+
+<ul>
+    @foreach (var book in _books)
+    {
+        <li>@book.volumeInfo.title</li>
+    }
+</ul>
+
+@code {
+    private List<Volume> _books = [];
+
+    private void OnItemSelected(object? sender, Volume book)
+    {
+        _books.Add(book);
+        StateHasChanged();
+    }
+
+}

@@ -1,0 +1,29 @@
+@page "/films"
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin,User")]
+
+@using Microsoft.AspNetCore.Authorization
+@using My_Everything_List.Services.TmdbService
+
+<div class="container-fluid d-flex justify-content-between">
+    <h3>Films</h3>
+    <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
+</div>
+
+<ul>
+    @foreach (var film in _films)
+    {
+        <li>@film.title</li>
+    }
+</ul>
+
+@code {
+    private List<Film> _films = [];
+
+    private void OnItemSelected(object? sender, Film film)
+    {
+        _films.Add(film);
+        StateHasChanged();
+    }
+
+}

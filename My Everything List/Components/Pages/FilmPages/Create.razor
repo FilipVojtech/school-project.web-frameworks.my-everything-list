@@ -1,4 +1,4 @@
-﻿@page "/films/create"
+﻿@page "/admin/films/create"
 @attribute [Authorize(Roles = "Admin")]
 
 @rendermode InteractiveServer
@@ -48,7 +48,7 @@
 </div>
 
 <div>
-    <a href="/films">Back to List</a>
+    <a href="/admin/films">Back to List</a>
 </div>
 
 @code {
@@ -60,7 +60,7 @@
         using var context = DbFactory.CreateDbContext();
         context.Film.Add(Film);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/films");
+        NavigationManager.NavigateTo("/admin/films");
     }
 
 }
