@@ -17,12 +17,6 @@ public partial class SearchMovieModal
     private Task _searchTimeout = Task.CompletedTask;
     private CancellationTokenSource _tokenSource = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        Query = "The Matrix";
-        _films = await TmdbService.SearchFilm(Query);
-    }
-
     private async Task ShowModal()
     {
         await _modal.ShowAsync();
