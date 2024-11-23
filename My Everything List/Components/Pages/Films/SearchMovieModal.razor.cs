@@ -9,6 +9,7 @@ public partial class SearchMovieModal
 {
     [Inject] private ITmdbService TmdbService { get; set; } = default!;
 
+    [Parameter] public required string ButtonTitle { get; set; }
     [Parameter] public required EventHandler<Film> OnItemSelected { get; set; }
     private string? Query { get; set; } = string.Empty;
     private Modal _modal = default!;
