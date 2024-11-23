@@ -62,6 +62,8 @@ public partial class SearchMovieModal
     private void OnFilmClick(MouseEventArgs args, Film film)
     {
         OnItemSelected(null, film);
+        Query = string.Empty;
+        _films = null;
         _modal.HideAsync();
     }
 }
