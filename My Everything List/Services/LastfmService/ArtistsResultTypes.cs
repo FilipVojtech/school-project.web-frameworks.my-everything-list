@@ -12,13 +12,13 @@ public class ArtistsSearchResults
 {
     private ArtistQuery queryField;
 
-    private ushort totalResultsField;
+    private uint totalResultsField;
 
     private byte startIndexField;
 
     private byte itemsPerPageField;
 
-    private resultsArtistmatches artistmatchesField;
+    private resultsArtist[] artistmatchesField;
 
     private string forField;
 
@@ -32,7 +32,7 @@ public class ArtistsSearchResults
 
     /// <remarks/>
     [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
-    public ushort totalResults
+    public uint totalResults
     {
         get => totalResultsField;
         set => totalResultsField = value;
@@ -55,7 +55,8 @@ public class ArtistsSearchResults
     }
 
     /// <remarks/>
-    public resultsArtistmatches artistmatches
+    [XmlArrayItem("artist", IsNullable = false)]
+    public resultsArtist[] artistmatches
     {
         get => artistmatchesField;
         set => artistmatchesField = value;
@@ -112,51 +113,32 @@ public class ArtistQuery
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-public class resultsArtistmatches
-{
-    private resultsArtistmatchesArtist artistField;
-
-    private string[] textField;
-
-    /// <remarks/>
-    public resultsArtistmatchesArtist artist
-    {
-        get => artistField;
-        set => artistField = value;
-    }
-
-    /// <remarks/>
-    [XmlText]
-    public string[] Text
-    {
-        get => textField;
-        set => textField = value;
-    }
-}
-
-/// <remarks/>
-[Serializable]
-[DesignerCategory("code")]
-[XmlType(AnonymousType = true)]
-public class resultsArtistmatchesArtist
+public class resultsArtist
 {
     private string nameField;
+
+    private uint listenersField;
 
     private string mbidField;
 
     private string urlField;
 
-    private string image_smallField;
-
-    private string imageField;
-
     private byte streamableField;
+
+    private resultsArtistImage[] imageField;
 
     /// <remarks/>
     public string name
     {
         get => nameField;
         set => nameField = value;
+    }
+
+    /// <remarks/>
+    public uint listeners
+    {
+        get => listenersField;
+        set => listenersField = value;
     }
 
     /// <remarks/>
@@ -174,23 +156,44 @@ public class resultsArtistmatchesArtist
     }
 
     /// <remarks/>
-    public string image_small
-    {
-        get => image_smallField;
-        set => image_smallField = value;
-    }
-
-    /// <remarks/>
-    public string image
-    {
-        get => imageField;
-        set => imageField = value;
-    }
-
-    /// <remarks/>
     public byte streamable
     {
         get => streamableField;
         set => streamableField = value;
+    }
+
+    /// <remarks/>
+    [XmlElement("image")]
+    public resultsArtistImage[] image
+    {
+        get => imageField;
+        set => imageField = value;
+    }
+}
+
+/// <remarks/>
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class resultsArtistImage
+{
+    private string sizeField;
+
+    private string valueField;
+
+    /// <remarks/>
+    [XmlAttribute]
+    public string size
+    {
+        get => sizeField;
+        set => sizeField = value;
+    }
+
+    /// <remarks/>
+    [XmlText]
+    public string Value
+    {
+        get => valueField;
+        set => valueField = value;
     }
 }
