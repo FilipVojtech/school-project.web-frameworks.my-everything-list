@@ -12,19 +12,19 @@ public class AlbumsSearchResults
 {
     private AlbumQuery queryField;
 
-    private ushort totalResultsField;
+    private uint totalResultsField;
 
     private byte startIndexField;
 
     private byte itemsPerPageField;
 
-    private resultsAlbummatches albummatchesField;
+    private resultsAlbum[] albummatchesField;
 
     private string forField;
 
     /// <remarks/>
     [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
-    public AlbumQuery QueryField
+    public AlbumQuery Query
     {
         get => queryField;
         set => queryField = value;
@@ -32,7 +32,7 @@ public class AlbumsSearchResults
 
     /// <remarks/>
     [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
-    public ushort totalResults
+    public uint totalResults
     {
         get => totalResultsField;
         set => totalResultsField = value;
@@ -55,7 +55,8 @@ public class AlbumsSearchResults
     }
 
     /// <remarks/>
-    public resultsAlbummatches albummatches
+    [XmlArrayItem("album", IsNullable = false)]
+    public resultsAlbum[] albummatches
     {
         get => albummatchesField;
         set => albummatchesField = value;
@@ -112,45 +113,19 @@ public class AlbumQuery
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-public class resultsAlbummatches
-{
-    private resultsAlbummatchesAlbum albumField;
-
-    private string[] textField;
-
-    /// <remarks/>
-    public resultsAlbummatchesAlbum album
-    {
-        get => albumField;
-        set => albumField = value;
-    }
-
-    /// <remarks/>
-    [XmlText]
-    public string[] Text
-    {
-        get => textField;
-        set => textField = value;
-    }
-}
-
-/// <remarks/>
-[Serializable]
-[DesignerCategory("code")]
-[XmlType(AnonymousType = true)]
-public class resultsAlbummatchesAlbum
+public class resultsAlbum
 {
     private string nameField;
 
     private string artistField;
 
-    private uint idField;
-
     private string urlField;
 
-    private resultsAlbummatchesAlbumImage[] imageField;
+    private resultsAlbumImage[] imageField;
 
     private byte streamableField;
+
+    private string mbidField;
 
     /// <remarks/>
     public string name
@@ -167,13 +142,6 @@ public class resultsAlbummatchesAlbum
     }
 
     /// <remarks/>
-    public uint id
-    {
-        get => idField;
-        set => idField = value;
-    }
-
-    /// <remarks/>
     public string url
     {
         get => urlField;
@@ -182,7 +150,7 @@ public class resultsAlbummatchesAlbum
 
     /// <remarks/>
     [XmlElement("image")]
-    public resultsAlbummatchesAlbumImage[] image
+    public resultsAlbumImage[] image
     {
         get => imageField;
         set => imageField = value;
@@ -194,13 +162,20 @@ public class resultsAlbummatchesAlbum
         get => streamableField;
         set => streamableField = value;
     }
+
+    /// <remarks/>
+    public string mbid
+    {
+        get => mbidField;
+        set => mbidField = value;
+    }
 }
 
 /// <remarks/>
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-public class resultsAlbummatchesAlbumImage
+public class resultsAlbumImage
 {
     private string sizeField;
 
