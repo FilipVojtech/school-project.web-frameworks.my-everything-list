@@ -1,16 +1,16 @@
-﻿namespace My_Everything_List.Services.LastfmService;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
+namespace My_Everything_List.Services.LastfmService;
 
-// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-public partial class AlbumsSearchResults
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+[XmlRoot(Namespace = "", IsNullable = false)]
+public class AlbumsSearchResults
 {
-
-    private Query queryField;
+    private AlbumQuery queryField;
 
     private ushort totalResultsField;
 
@@ -23,97 +23,60 @@ public partial class AlbumsSearchResults
     private string forField;
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
-    public Query Query
+    [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
+    public AlbumQuery QueryField
     {
-        get
-        {
-            return this.queryField;
-        }
-        set
-        {
-            this.queryField = value;
-        }
+        get => queryField;
+        set => queryField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
+    [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
     public ushort totalResults
     {
-        get
-        {
-            return this.totalResultsField;
-        }
-        set
-        {
-            this.totalResultsField = value;
-        }
+        get => totalResultsField;
+        set => totalResultsField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
+    [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
     public byte startIndex
     {
-        get
-        {
-            return this.startIndexField;
-        }
-        set
-        {
-            this.startIndexField = value;
-        }
+        get => startIndexField;
+        set => startIndexField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
+    [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
     public byte itemsPerPage
     {
-        get
-        {
-            return this.itemsPerPageField;
-        }
-        set
-        {
-            this.itemsPerPageField = value;
-        }
+        get => itemsPerPageField;
+        set => itemsPerPageField = value;
     }
 
     /// <remarks/>
     public resultsAlbummatches albummatches
     {
-        get
-        {
-            return this.albummatchesField;
-        }
-        set
-        {
-            this.albummatchesField = value;
-        }
+        get => albummatchesField;
+        set => albummatchesField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [XmlAttribute]
     public string @for
     {
-        get
-        {
-            return this.forField;
-        }
-        set
-        {
-            this.forField = value;
-        }
+        get => forField;
+        set => forField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
-[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://a9.com/-/spec/opensearch/1.1/", IsNullable = false)]
-public partial class Query
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true, Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
+[XmlRoot(Namespace = "http://a9.com/-/spec/opensearch/1.1/", IsNullable = false)]
+public class AlbumQuery
 {
-
     private string roleField;
 
     private string searchTermsField;
@@ -121,55 +84,36 @@ public partial class Query
     private byte startPageField;
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [XmlAttribute]
     public string role
     {
-        get
-        {
-            return this.roleField;
-        }
-        set
-        {
-            this.roleField = value;
-        }
+        get => roleField;
+        set => roleField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [XmlAttribute]
     public string searchTerms
     {
-        get
-        {
-            return this.searchTermsField;
-        }
-        set
-        {
-            this.searchTermsField = value;
-        }
+        get => searchTermsField;
+        set => searchTermsField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [XmlAttribute]
     public byte startPage
     {
-        get
-        {
-            return this.startPageField;
-        }
-        set
-        {
-            this.startPageField = value;
-        }
+        get => startPageField;
+        set => startPageField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class resultsAlbummatches
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class resultsAlbummatches
 {
-
     private resultsAlbummatchesAlbum albumField;
 
     private string[] textField;
@@ -177,38 +121,25 @@ public partial class resultsAlbummatches
     /// <remarks/>
     public resultsAlbummatchesAlbum album
     {
-        get
-        {
-            return this.albumField;
-        }
-        set
-        {
-            this.albumField = value;
-        }
+        get => albumField;
+        set => albumField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
+    [XmlText]
     public string[] Text
     {
-        get
-        {
-            return this.textField;
-        }
-        set
-        {
-            this.textField = value;
-        }
+        get => textField;
+        set => textField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class resultsAlbummatchesAlbum
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class resultsAlbummatchesAlbum
 {
-
     private string nameField;
 
     private string artistField;
@@ -224,122 +155,70 @@ public partial class resultsAlbummatchesAlbum
     /// <remarks/>
     public string name
     {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
+        get => nameField;
+        set => nameField = value;
     }
 
     /// <remarks/>
     public string artist
     {
-        get
-        {
-            return this.artistField;
-        }
-        set
-        {
-            this.artistField = value;
-        }
+        get => artistField;
+        set => artistField = value;
     }
 
     /// <remarks/>
     public uint id
     {
-        get
-        {
-            return this.idField;
-        }
-        set
-        {
-            this.idField = value;
-        }
+        get => idField;
+        set => idField = value;
     }
 
     /// <remarks/>
     public string url
     {
-        get
-        {
-            return this.urlField;
-        }
-        set
-        {
-            this.urlField = value;
-        }
+        get => urlField;
+        set => urlField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("image")]
+    [XmlElement("image")]
     public resultsAlbummatchesAlbumImage[] image
     {
-        get
-        {
-            return this.imageField;
-        }
-        set
-        {
-            this.imageField = value;
-        }
+        get => imageField;
+        set => imageField = value;
     }
 
     /// <remarks/>
     public byte streamable
     {
-        get
-        {
-            return this.streamableField;
-        }
-        set
-        {
-            this.streamableField = value;
-        }
+        get => streamableField;
+        set => streamableField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class resultsAlbummatchesAlbumImage
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class resultsAlbummatchesAlbumImage
 {
-
     private string sizeField;
 
     private string valueField;
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [XmlAttribute]
     public string size
     {
-        get
-        {
-            return this.sizeField;
-        }
-        set
-        {
-            this.sizeField = value;
-        }
+        get => sizeField;
+        set => sizeField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
+    [XmlText]
     public string Value
     {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
-        }
+        get => valueField;
+        set => valueField = value;
     }
 }
-
-
-
