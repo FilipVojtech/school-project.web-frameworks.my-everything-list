@@ -12,15 +12,13 @@ public class SongsSearchResults
 {
     private SongQuery queryField;
 
-    private ushort totalResultsField;
+    private uint totalResultsField;
 
     private byte startIndexField;
 
     private byte itemsPerPageField;
 
-    private resultsTrackmatches trackmatchesField;
-
-    private string forField;
+    private resultsTrack[] trackmatchesField;
 
     /// <remarks/>
     [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
@@ -32,7 +30,7 @@ public class SongsSearchResults
 
     /// <remarks/>
     [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
-    public ushort totalResults
+    public uint totalResults
     {
         get => totalResultsField;
         set => totalResultsField = value;
@@ -55,18 +53,11 @@ public class SongsSearchResults
     }
 
     /// <remarks/>
-    public resultsTrackmatches trackmatches
+    [XmlArrayItem("track", IsNullable = false)]
+    public resultsTrack[] trackmatches
     {
         get => trackmatchesField;
         set => trackmatchesField = value;
-    }
-
-    /// <remarks/>
-    [XmlAttribute]
-    public string @for
-    {
-        get => forField;
-        set => forField = value;
     }
 }
 
@@ -79,8 +70,6 @@ public class SongQuery
 {
     private string roleField;
 
-    private string searchTermsField;
-
     private byte startPageField;
 
     /// <remarks/>
@@ -89,14 +78,6 @@ public class SongQuery
     {
         get => roleField;
         set => roleField = value;
-    }
-
-    /// <remarks/>
-    [XmlAttribute]
-    public string searchTerms
-    {
-        get => searchTermsField;
-        set => searchTermsField = value;
     }
 
     /// <remarks/>
@@ -112,33 +93,7 @@ public class SongQuery
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-public class resultsTrackmatches
-{
-    private resultsTrackmatchesTrack trackField;
-
-    private string[] textField;
-
-    /// <remarks/>
-    public resultsTrackmatchesTrack track
-    {
-        get => trackField;
-        set => trackField = value;
-    }
-
-    /// <remarks/>
-    [XmlText]
-    public string[] Text
-    {
-        get => textField;
-        set => textField = value;
-    }
-}
-
-/// <remarks/>
-[Serializable]
-[DesignerCategory("code")]
-[XmlType(AnonymousType = true)]
-public class resultsTrackmatchesTrack
+public class resultsTrack
 {
     private string nameField;
 
@@ -146,11 +101,13 @@ public class resultsTrackmatchesTrack
 
     private string urlField;
 
-    private resultsTrackmatchesTrackStreamable streamableField;
+    private string streamableField;
 
     private uint listenersField;
 
-    private resultsTrackmatchesTrackImage imageField;
+    private resultsTrackImage[] imageField;
+
+    private string mbidField;
 
     /// <remarks/>
     public string name
@@ -174,7 +131,7 @@ public class resultsTrackmatchesTrack
     }
 
     /// <remarks/>
-    public resultsTrackmatchesTrackStreamable streamable
+    public string streamable
     {
         get => streamableField;
         set => streamableField = value;
@@ -188,37 +145,18 @@ public class resultsTrackmatchesTrack
     }
 
     /// <remarks/>
-    public resultsTrackmatchesTrackImage image
+    [XmlElement("image")]
+    public resultsTrackImage[] image
     {
         get => imageField;
         set => imageField = value;
     }
-}
-
-/// <remarks/>
-[Serializable]
-[DesignerCategory("code")]
-[XmlType(AnonymousType = true)]
-public class resultsTrackmatchesTrackStreamable
-{
-    private byte fulltrackField;
-
-    private byte valueField;
 
     /// <remarks/>
-    [XmlAttribute]
-    public byte fulltrack
+    public string mbid
     {
-        get => fulltrackField;
-        set => fulltrackField = value;
-    }
-
-    /// <remarks/>
-    [XmlText]
-    public byte Value
-    {
-        get => valueField;
-        set => valueField = value;
+        get => mbidField;
+        set => mbidField = value;
     }
 }
 
@@ -226,7 +164,7 @@ public class resultsTrackmatchesTrackStreamable
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-public class resultsTrackmatchesTrackImage
+public class resultsTrackImage
 {
     private string sizeField;
 
