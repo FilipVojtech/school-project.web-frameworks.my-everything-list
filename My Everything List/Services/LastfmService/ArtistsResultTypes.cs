@@ -10,7 +10,7 @@ namespace My_Everything_List.Services.LastfmService;
 [XmlRoot(Namespace = "", IsNullable = false)]
 public class ArtistsSearchResults
 {
-    private Query queryField;
+    private ArtistQuery queryField;
 
     private ushort totalResultsField;
 
@@ -24,7 +24,7 @@ public class ArtistsSearchResults
 
     /// <remarks/>
     [XmlElement(Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
-    public Query Query
+    public ArtistQuery Query
     {
         get => queryField;
         set => queryField = value;
@@ -75,7 +75,7 @@ public class ArtistsSearchResults
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true, Namespace = "http://a9.com/-/spec/opensearch/1.1/")]
 [XmlRoot(Namespace = "http://a9.com/-/spec/opensearch/1.1/", IsNullable = false)]
-public class Query
+public class ArtistQuery
 {
     private string roleField;
 
