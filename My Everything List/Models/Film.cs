@@ -68,14 +68,14 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
         return Equals((Film)obj);
     }
 
-    public static bool operator ==(Film? left, Film? right)
+    public static bool operator ==(Film left, Film right)
     {
-        return Equals(left, right);
+        return left.Equals(right);
     }
 
-    public static bool operator !=(Film? left, Film? right)
+    public static bool operator !=(Film left, Film right)
     {
-        return !Equals(left, right);
+        return !left.Equals(right);
     }
 
     public override int GetHashCode()

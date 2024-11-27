@@ -44,14 +44,14 @@ public abstract class MusicItem : IEquatable<MusicItem>, IComparable<MusicItem>,
         return Equals((MusicItem)obj);
     }
 
-    public static bool operator ==(MusicItem? left, MusicItem? right)
+    public static bool operator ==(MusicItem left, MusicItem right)
     {
-        return Equals(left, right);
+        return left.Equals(right);
     }
 
-    public static bool operator !=(MusicItem? left, MusicItem? right)
+    public static bool operator !=(MusicItem left, MusicItem right)
     {
-        return !Equals(left, right);
+        return !left.Equals(right);
     }
 
     public override int GetHashCode()

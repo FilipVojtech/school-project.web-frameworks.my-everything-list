@@ -25,14 +25,14 @@ public class Artist : MusicItem, IEquatable<Artist>
         return Equals((Artist)obj);
     }
 
-    public static bool operator ==(Artist? left, Artist? right)
+    public static bool operator ==(Artist left, Artist right)
     {
-        return Equals(left, right);
+        return left.Equals(right);
     }
 
-    public static bool operator !=(Artist? left, Artist? right)
+    public static bool operator !=(Artist left, Artist right)
     {
-        return !Equals(left, right);
+        return !left.Equals(right);
     }
 
     public override int GetHashCode()

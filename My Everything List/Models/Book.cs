@@ -72,14 +72,14 @@ public class Book : IEquatable<Book>, IComparable<Book>
         return Equals((Book)obj);
     }
 
-    public static bool operator ==(Book? left, Book? right)
+    public static bool operator ==(Book left, Book right)
     {
-        return Equals(left, right);
+        return left.Equals(right);
     }
 
-    public static bool operator !=(Book? left, Book? right)
+    public static bool operator !=(Book left, Book right)
     {
-        return !Equals(left, right);
+        return !left.Equals(right);
     }
 
     public override int GetHashCode()

@@ -55,14 +55,14 @@ public class User : IEquatable<User>
         return Equals((User)obj);
     }
 
-    public static bool operator ==(User? left, User? right)
+    public static bool operator ==(User left, User right)
     {
-        return Equals(left, right);
+        return left.Equals(right);
     }
 
-    public static bool operator !=(User? left, User? right)
+    public static bool operator !=(User left, User right)
     {
-        return !Equals(left, right);
+        return !left.Equals(right);
     }
 
     public override int GetHashCode()

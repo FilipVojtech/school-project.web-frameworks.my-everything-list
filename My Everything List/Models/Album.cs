@@ -30,14 +30,14 @@ public class Album : MusicItem, IEquatable<Album>, IComparable<Album>
         return Equals((Album)obj);
     }
 
-    public static bool operator ==(Album? left, Album? right)
+    public static bool operator ==(Album left, Album right)
     {
-        return Equals(left, right);
+        return left.Equals(right);
     }
 
-    public static bool operator !=(Album? left, Album? right)
+    public static bool operator !=(Album left, Album right)
     {
-        return !Equals(left, right);
+        return !left.Equals(right);
     }
 
     public override int GetHashCode()
