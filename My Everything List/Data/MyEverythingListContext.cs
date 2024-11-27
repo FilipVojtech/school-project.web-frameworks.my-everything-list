@@ -18,9 +18,27 @@ public class MyEverythingListContext : DbContext
 
     public DbSet<MusicItem> MusicItems { get; set; } = default!;
 
-    public DbSet<Artist> Artists { get; set; } = default!;
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MusicItem>()
+            .HasDiscriminator(e => e.ItemType);
 
-    public DbSet<Album> Albums { get; set; } = default!;
+        modelBuilder.Entity<Artist>()
+            .HasDiscriminator(a => a.ItemType)
+            .HasValue(MusicItemType.Artist);
 
-    public DbSet<Song> Songs { get; set; } = default!;
+        modelBuilder.Entity<Album>()
+            .HasDiscriminator(a => a.ItemType)
+            .HasValue(MusicItemType.Album);
+        modelBuilder.Entity<Album>()
+            .Property(a => a.Artist)
+            .HasColumnName("artist");
+
+        modelBuilder.Entity<Song>()
+            .HasDiscriminator(s => s.ItemType)
+            .HasValue(MusicItemType.Track);
+        modelBuilder.Entity<Song>()
+            .Property(s => s.Artist)
+            .HasColumnName("artist");
+    }
 }
