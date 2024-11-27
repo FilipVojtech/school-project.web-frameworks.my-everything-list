@@ -33,10 +33,16 @@
                     <AuthorizeView Roles="Admin">
                         <Authorized>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                   aria-expanded="false">
+                                <NavLink
+                                    class="nav-link dropdown-toggle"
+                                    href="/admin"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    Match="NavLinkMatch.Prefix"
+                                >
                                     Admin Section
-                                </a>
+                                </NavLink>
                                 <ul class="dropdown-menu">
                                     <li><h6 class="dropdown-header">Entities</h6></li>
                                     <li><a class="dropdown-item" href="/admin/users">Users</a></li>
