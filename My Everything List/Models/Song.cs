@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace My_Everything_List.Models;
 
-public class Songs : MusicItem
+public class Song : MusicItem
 {
-    public Songs(string name, string? image, string artist) : base(name, image)
+    public Song(string name, string? image, string artist) : base(name, image)
     {
         Artist = artist;
     }

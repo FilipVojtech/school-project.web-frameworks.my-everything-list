@@ -59,9 +59,9 @@ public partial class SearchMusicModal
         }, ct);
     }
 
-    private void OnSongClick(MouseEventArgs? args, Models.Songs songs)
+    private void OnSongClick(MouseEventArgs? args, Models.Song song)
     {
-        OnItemSelected(null, songs);
+        OnItemSelected(null, song);
         Query = string.Empty;
         _songs = null;
         _albums = null;
