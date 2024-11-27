@@ -1,0 +1,28 @@
+<Card Id="@Id" class="music-item user-select-none cursor-pointer interactive" @onclick="OnClick">
+    <CardBody class="d-flex">
+        <div class="me-3">
+            @if (Image != null)
+            {
+                <img src="@Image" alt="@Title artist cover" class="music-item-cover"/>
+            }
+            else
+            {
+                <div class="music-placeholder bg-body-secondary d-flex align-items-center justify-content-center">
+                    <span class="fs-6 fw-bold text-center">No<br>cover</span>
+                </div>
+            }
+        </div>
+        <div>
+            <CardTitle>@Title</CardTitle>
+        </div>
+    </CardBody>
+</Card>
+
+@code {
+
+    [Parameter] public required string Id { get; set; }
+    [Parameter] public required string Title { get; set; }
+    [Parameter] public string? Image { get; set; }
+    [Parameter] public required EventCallback<MouseEventArgs> OnClick { get; set; }
+
+}
