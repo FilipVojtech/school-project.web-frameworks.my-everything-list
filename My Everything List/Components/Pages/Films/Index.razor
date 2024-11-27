@@ -2,20 +2,28 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
 
+@inject NavigationManager Navigation
+
 @using Microsoft.AspNetCore.Authorization
-@using My_Everything_List.Services.TmdbService
+@using Film = My_Everything_List.Models.Film
 
 <div class="container-fluid d-flex justify-content-between">
     <h3>Films</h3>
     <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
 </div>
 
-<ul>
     @foreach (var film in _films)
     {
-        <li>@film.title</li>
+        <FilmItem
+            Id="film.Id"
+            Title="@film.Title"
+            Description="@film.Description"
+            Genres="@film.Genres"
+            Image="@film.Image"
+            ReleaseDate="@film.ReleaseDate"
+            OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
+        />
     }
-</ul>
 
 @code {
     private List<Film> _films = [];
