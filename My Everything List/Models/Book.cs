@@ -28,6 +28,8 @@ public class Book
     [Column("isbn")]
     public string? Isbn { get; set; }
 
+    public ICollection<User>? SavedBy { get; set; }
+
     public Book()
     {
         Title = string.Empty;
