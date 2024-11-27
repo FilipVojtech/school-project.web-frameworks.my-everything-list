@@ -4,7 +4,6 @@
 
 @inject NavigationManager Navigation
 @inject IDbContextFactory<MyEverythingListContext> DbFactory
-@inject NavigationManager NavigationManager
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
@@ -40,7 +39,6 @@
         using var context = DbFactory.CreateDbContext();
         context.Film.Add(film);
         context.SaveChanges();
-        NavigationManager.NavigateTo("/users");
     }
 
     protected override async Task OnInitializedAsync()
