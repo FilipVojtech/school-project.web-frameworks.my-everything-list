@@ -43,4 +43,9 @@ public class Film
         Description = tmdbFilm.tagline;
         Image = tmdbFilm.poster_path;
     }
+
+    public Film()
+    {
+        Genres = [];
+    }
 }
