@@ -17,51 +17,6 @@ namespace MyEverythingList.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
-            modelBuilder.Entity("BookUser", b =>
-                {
-                    b.Property<int>("SavedBooksId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SavedById")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("SavedBooksId", "SavedById");
-
-                    b.HasIndex("SavedById");
-
-                    b.ToTable("users_books", (string)null);
-                });
-
-            modelBuilder.Entity("FilmUser", b =>
-                {
-                    b.Property<int>("SavedById")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SavedFilmsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("SavedById", "SavedFilmsId");
-
-                    b.HasIndex("SavedFilmsId");
-
-                    b.ToTable("users_films", (string)null);
-                });
-
-            modelBuilder.Entity("MusicItemUser", b =>
-                {
-                    b.Property<int>("SavedById")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SavedMusicId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("SavedById", "SavedMusicId");
-
-                    b.HasIndex("SavedMusicId");
-
-                    b.ToTable("users_music", (string)null);
-                });
-
             modelBuilder.Entity("My_Everything_List.Models.Book", b =>
                 {
                     b.Property<int>("Id")
@@ -184,6 +139,51 @@ namespace MyEverythingList.Migrations
                     b.ToTable("users");
                 });
 
+            modelBuilder.Entity("users_books", b =>
+                {
+                    b.Property<int>("SavedBooksId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SavedById")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("SavedBooksId", "SavedById");
+
+                    b.HasIndex("SavedById");
+
+                    b.ToTable("users_books");
+                });
+
+            modelBuilder.Entity("users_films", b =>
+                {
+                    b.Property<int>("SavedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SavedFilmsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("SavedById", "SavedFilmsId");
+
+                    b.HasIndex("SavedFilmsId");
+
+                    b.ToTable("users_films");
+                });
+
+            modelBuilder.Entity("users_music", b =>
+                {
+                    b.Property<int>("SavedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SavedMusicId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("SavedById", "SavedMusicId");
+
+                    b.HasIndex("SavedMusicId");
+
+                    b.ToTable("users_music");
+                });
+
             modelBuilder.Entity("My_Everything_List.Models.Album", b =>
                 {
                     b.HasBaseType("My_Everything_List.Models.MusicItem");
@@ -223,7 +223,7 @@ namespace MyEverythingList.Migrations
                     b.HasDiscriminator().HasValue(2);
                 });
 
-            modelBuilder.Entity("BookUser", b =>
+            modelBuilder.Entity("users_books", b =>
                 {
                     b.HasOne("My_Everything_List.Models.Book", null)
                         .WithMany()
@@ -238,7 +238,7 @@ namespace MyEverythingList.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FilmUser", b =>
+            modelBuilder.Entity("users_films", b =>
                 {
                     b.HasOne("My_Everything_List.Models.User", null)
                         .WithMany()
@@ -253,7 +253,7 @@ namespace MyEverythingList.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MusicItemUser", b =>
+            modelBuilder.Entity("users_music", b =>
                 {
                     b.HasOne("My_Everything_List.Models.User", null)
                         .WithMany()

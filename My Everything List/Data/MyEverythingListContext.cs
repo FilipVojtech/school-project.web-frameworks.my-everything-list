@@ -51,15 +51,15 @@ public class MyEverythingListContext : DbContext
             entity
                 .HasMany(e => e.SavedFilms)
                 .WithMany(e => e.SavedBy)
-                .UsingEntity(e => e.ToTable("users_films"));
+                .UsingEntity("users_films");
             entity
                 .HasMany(e => e.SavedBooks)
                 .WithMany(e => e.SavedBy)
-                .UsingEntity(e => e.ToTable("users_books"));
+                .UsingEntity("users_books");
             entity
                 .HasMany(e => e.SavedMusic)
                 .WithMany(e => e.SavedBy)
-                .UsingEntity(e => e.ToTable("users_music"));
+                .UsingEntity("users_music");
         });
     }
 }
