@@ -26,4 +26,6 @@ public abstract class MusicItem
     [Column("image")]
     [DataType(DataType.Url)]
     public string? Image { get; set; }
+
+    public ICollection<User>? SavedBy { get; set; }
 }
