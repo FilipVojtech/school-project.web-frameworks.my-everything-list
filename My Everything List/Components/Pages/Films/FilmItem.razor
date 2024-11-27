@@ -32,6 +32,6 @@
     [Parameter] public string? Description { get; set; }
     [Parameter] public string? Image { get; set; }
     [Parameter] public DateOnly ReleaseDate { get; set; }
-    [Parameter] public Genre[]? Genres { get; set; }
+    [Parameter] public List<string>? Genres { get; set; }
     [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 }
