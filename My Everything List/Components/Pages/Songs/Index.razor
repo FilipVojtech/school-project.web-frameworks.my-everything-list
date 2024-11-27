@@ -1,11 +1,75 @@
 @page "/songs"
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
+@inject NavigationManager Navigation
 
 @using Microsoft.AspNetCore.Authorization
+@using My_Everything_List.Models
 
-<h3>Songs</h3>
+<div class="container-fluid d-flex justify-content-between">
+    <h3>Songs</h3>
+    <SearchMusicModal ButtonTitle="Add Music" OnItemSelected="(_, song) => AddMusicItem(song)"/>
+</div>
+
+@{
+    var artists = _musicItems.FindAll(item => item.ItemType == MusicItemType.Artist);
+    var albums = _musicItems.FindAll(item => item.ItemType == MusicItemType.Album);
+    var tracks = _musicItems.FindAll(item => item.ItemType == MusicItemType.Track);
+
+    if (tracks.Count > 0)
+    {
+        foreach (var track in tracks.Cast<Song>())
+        {
+            <SongItem
+                Id="@track.Id.ToString()"
+                Title="@track.Name"
+                Artist="@track.Artist"
+                Image="@track.Image"
+                OnClick='() => Navigation.NavigateTo($"/songs/{track.Id}")'
+            />
+        }
+    }
+
+    if (artists.Count > 0)
+    {
+        <h3>Artists</h3>
+        <ul>
+            @foreach (var artist in artists.Cast<Artist>())
+            {
+                <li>
+                    <div>
+                        <img src="@artist.Image" alt="">
+                        @artist.Name
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+
+    if (albums.Count > 0)
+    {
+        <h3>Albums</h3>
+        <ul>
+            @foreach (var album in albums.Cast<Album>())
+            {
+                <li>
+                    <div>
+                        <img src="@album.Image" alt="">
+                        @album.Name
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+}
 
 @code {
+    List<MusicItem> _musicItems = [];
+
+    private void AddMusicItem(MusicItem item)
+    {
+        _musicItems.Add(item);
+        StateHasChanged();
+    }
 
 }

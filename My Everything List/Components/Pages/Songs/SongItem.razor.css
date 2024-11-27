@@ -1,0 +1,9 @@
+.music-item-cover {
+    width: 100px;
+    object-fit: cover;
+}
+
+.music-placeholder {
+    width: 100px;
+    height: 100px;
+}
