@@ -15,7 +15,7 @@ public class Film
 
     [Column("release_date")] public DateOnly ReleaseDate { get; set; }
 
-    [Column("genres")] public List<string> Genres { get; set; }
+    [Column("genres")] public List<string>? Genres { get; set; }
 
     [Column("description")]
     [StringLength(512)]
@@ -39,7 +39,7 @@ public class Film
     {
         Title = tmdbFilm.title;
         ReleaseDate = DateOnly.Parse(tmdbFilm.release_date);
-        Genres = tmdbFilm.genres.Select(genre => genre.name).ToList();
+        Genres = tmdbFilm.genres?.Select(genre => genre.name).ToList() ?? null;
         Description = tmdbFilm.tagline;
         Image = tmdbFilm.poster_path;
     }
