@@ -1,5 +1,4 @@
 @page "/register"
-@rendermode InteractiveServer
 
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
@@ -68,7 +67,8 @@
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Email, Model.Email),
+            new(ClaimTypes.NameIdentifier, userAccount.Entity.Id.ToString()),
+            new(ClaimTypes.Email, userAccount.Entity.Email),
             new(ClaimTypes.Role, userAccount.Entity.Role)
         };
 
