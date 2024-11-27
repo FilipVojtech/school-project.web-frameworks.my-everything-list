@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using My_Everything_List.Models
 
-<div class="container-fluid d-flex justify-content-between">
+<div class="container-fluid d-flex justify-content-between mb-3">
     <h3>Songs</h3>
     <SearchMusicModal ButtonTitle="Add Music" OnItemSelected="(_, song) => AddMusicItem(song)"/>
 </div>
@@ -25,7 +25,7 @@
                 Title="@track.Name"
                 Artist="@track.Artist"
                 Image="@track.Image"
-                OnClick='() => Navigation.NavigateTo($"/songs/{track.Id}")'
+                OnClick='() => Navigation.NavigateTo($"/songs/song/{track.Id}")'
             />
         }
     }
@@ -33,33 +33,29 @@
     if (artists.Count > 0)
     {
         <h3>Artists</h3>
-        <ul>
-            @foreach (var artist in artists.Cast<Artist>())
-            {
-                <li>
-                    <div>
-                        <img src="@artist.Image" alt="">
-                        @artist.Name
-                    </div>
-                </li>
-            }
-        </ul>
+        @foreach (var artist in artists.Cast<Artist>())
+        {
+            <ArtistItem
+                Id="@artist.Id.ToString()"
+                Title="@artist.Name"
+                Image="@artist.Image"
+                OnClick='()=>Navigation.NavigateTo($"/songs/artist/{artist.Id}")'
+            />
+        }
     }
 
     if (albums.Count > 0)
     {
         <h3>Albums</h3>
-        <ul>
-            @foreach (var album in albums.Cast<Album>())
-            {
-                <li>
-                    <div>
-                        <img src="@album.Image" alt="">
-                        @album.Name
-                    </div>
-                </li>
-            }
-        </ul>
+        @foreach (var album in albums.Cast<Album>())
+        {
+            <AlbumItem
+                Id="@album.Id.ToString()"
+                Title="@album.Name"
+                Image="@album.Image"
+                OnClick='() => Navigation.NavigateTo($"/songs/album/{album.Id}")'
+            />
+        }
     }
 }
 
