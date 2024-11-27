@@ -41,7 +41,7 @@
                             Id="@film.id"
                             Title="@film.original_title"
                             Description="@film.overview"
-                            Genres="@film.genres"
+                            Genres="@film.genres.Select(genre => genre.name).ToList()"
                             Image="@film.poster_path"
                             ReleaseDate="releaseDate"
                             OnClick="args => OnFilmClick(args, film)"
