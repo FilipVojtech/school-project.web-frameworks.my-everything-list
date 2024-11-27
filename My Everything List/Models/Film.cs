@@ -26,6 +26,8 @@ public class Film
     [StringLength(32)]
     public string? Image { get; set; }
 
+    public ICollection<User>? SavedBy { get; set; }
+
     public Film(string? title, DateOnly releaseDate, string[] genres, string? description, string? image)
     {
         Title = title;
