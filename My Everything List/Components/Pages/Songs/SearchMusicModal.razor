@@ -1,0 +1,95 @@
+@using My_Everything_List.Models
+@rendermode InteractiveServer
+
+<Button Color="ButtonColor.Primary" @onclick="ShowModal">@ButtonTitle</Button>
+
+<Modal @ref="_modal" Title="Search">
+    <BodyTemplate>
+        <form class="form-floating mb-3">
+            <div class="input-group">
+                <span class="input-group-text"><Icon Name="IconName.Search"/></span>
+                <div class="form-floating">
+                    <InputText
+                        @bind-Value="Query"
+                        id="movieSearch"
+                        name="movieSearch"
+                        class="form-control"
+                        placeholder=""
+                        type="search"
+                        autocomplete="off"
+                        @oninput="args => OnInputHandler((string?)args.Value)"
+                    />
+                    <label for="movieSearch">Item name</label>
+                </div>
+            </div>
+        </form>
+        @if (_searching)
+        {
+            <div class="d-flex justify-content-center">
+                <Spinner/>
+            </div>
+        }
+        else if (_artists != null || _albums != null || _songs != null)
+        {
+            var artistsCount = _artists?.artistmatches.Length ?? 0;
+            var albumsCount = _albums?.albummatches.Length ?? 0;
+            var songsCount = _songs?.trackmatches.Length ?? 0;
+            <Tabs @ref="_tabs" NavStyle="NavStyle.Pills" Class="d-flex justify-content-center mb-2">
+                <Tab Title="Artists" Name="Artists" Disabled="@(artistsCount == 0)">
+                    <Content>
+                        <div class="search-results d-flex flex-column gap-2">
+                            @foreach (var artist in _artists!.artistmatches)
+                            {
+                                var artistImage = artist.image.FirstOrDefault(image => image.size == "large")?.Value ?? null;
+                                <ArtistItem
+                                    Id="@artist.mbid"
+                                    Title="@artist.name"
+                                    Image="@artistImage"
+                                    OnClick="args => OnArtistClick(args, new Artist(artist.name, artistImage))"
+                                />
+                            }
+                        </div>
+                    </Content>
+                </Tab>
+                <Tab Title="Albums" Name="Albums" Disabled="@(albumsCount == 0)">
+                    <Content>
+                        <div class="search-results d-flex flex-column gap-2">
+                            @foreach (var album in _albums!.albummatches)
+                            {
+                                var albumImage = album.image.FirstOrDefault(image => image.size == "large")?.Value ?? null;
+                                <AlbumItem
+                                    Id="@album.mbid"
+                                    Title="@album.name"
+                                    Image="@albumImage"
+                                    Artist="@album.artist"
+                                    OnClick="args => OnAlbumClick(args, new Album(album.name, albumImage, album.artist))"
+                                />
+                            }
+                        </div>
+                    </Content>
+                </Tab>
+                <Tab Title="Songs" Name="Songs" Disabled="@(songsCount == 0)" Active="@((_songs?.trackmatches.Length ?? 0) > 0)">
+                    <Content>
+                        <div class="search-results d-flex flex-column gap-2">
+                            @foreach (var song in _songs!.trackmatches)
+                            {
+                                var songImage = song.image.FirstOrDefault(image => image.size == "large")?.Value ?? null;
+                                <SongItem
+                                    Id="@song.mbid"
+                                    Title="@song.name"
+                                    Image="@songImage"
+                                    Artist="@song.artist"
+                                    OnClick="args => OnSongClick(args, new Songs(song.name, songImage, song.artist))"
+                                />
+                            }
+                        </div>
+                    </Content>
+                </Tab>
+            </Tabs>
+        }
+        else
+        {
+            <div class="text-center">This app uses Last.fm service to search for your music. Because of this, a lot of images will not have their cover arts.</div>
+        }
+    </BodyTemplate>
+</Modal>
