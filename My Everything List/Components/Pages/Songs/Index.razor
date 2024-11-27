@@ -1,9 +1,13 @@
 @page "/songs"
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
+
 @inject NavigationManager Navigation
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
 
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
 @using My_Everything_List.Models
 
 <div class="container-fluid d-flex justify-content-between mb-3">
@@ -62,10 +66,21 @@
 @code {
     List<MusicItem> _musicItems = [];
 
+    protected override async Task OnInitializedAsync()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+        _musicItems = context.MusicItems.ToList();
+        await base.OnInitializedAsync();
+    }
+
     private void AddMusicItem(MusicItem item)
     {
         _musicItems.Add(item);
         StateHasChanged();
+
+        using var context = DbFactory.CreateDbContext();
+        context.MusicItems.Add(item);
+        context.SaveChanges();
     }
 
 }
