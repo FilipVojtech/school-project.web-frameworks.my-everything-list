@@ -1,13 +1,13 @@
-﻿@page "/users/delete"
+﻿@page "/admin/users/delete"
 @attribute [Authorize(Roles = "Admin")]
+
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject NavigationManager NavigationManager
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using My_Everything_List.Data
 @using My_Everything_List.Models
-
-@inject IDbContextFactory<MyEverythingListContext> DbFactory
-@inject NavigationManager NavigationManager
 
 <PageTitle>Delete</PageTitle>
 
@@ -38,7 +38,7 @@
         <EditForm method="post" Model="user" OnValidSubmit="DeleteUser" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(user is null)">Delete</button>
             |
-            <a href="/users">Back to List</a>
+            <a href="/admin/users">Back to List</a>
         </EditForm>
     }
 </div>
@@ -64,6 +64,6 @@
         using var context = DbFactory.CreateDbContext();
         context.User.Remove(user!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/users");
+        NavigationManager.NavigateTo("/admin/users");
     }
 }
