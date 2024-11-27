@@ -2,28 +2,50 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
 
+@inject NavigationManager Navigation
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
+
 @using Microsoft.AspNetCore.Authorization
-@using My_Everything_List.Services.GoogleBooksService
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
 
 <div class="container-fluid d-flex justify-content-between">
     <h3>Books</h3>
     <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
 </div>
 
-<ul>
-    @foreach (var book in _books)
-    {
-        <li>@book.volumeInfo.title</li>
-    }
-</ul>
+@foreach (var book in _books)
+{
+    <BookItem
+        Id="@book.Id.ToString()"
+        Title="@book.Title"
+        Authors="@book.Authors"
+        Description="@book.Description"
+        Image="@book.Image"
+        Isbn="@book.Isbn"
+        OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
+    />
+}
 
 @code {
-    private List<Volume> _books = [];
+    private List<Book> _books = [];
 
-    private void OnItemSelected(object? sender, Volume book)
+    protected override async Task OnInitializedAsync()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+        _books = context.Books.ToList();
+        await base.OnInitializedAsync();
+    }
+
+    private void OnItemSelected(object? sender, Book book)
     {
         _books.Add(book);
         StateHasChanged();
+
+        using var context = DbFactory.CreateDbContext();
+        context.Books.Add(book);
+        context.SaveChanges();
     }
 
 }
