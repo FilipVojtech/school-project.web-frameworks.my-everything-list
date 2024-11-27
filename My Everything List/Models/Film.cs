@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace My_Everything_List.Models;
 
 [Table("film")]
-public class Film : IEquatable<Film>
+public class Film : IEquatable<Film>, IComparable<Film>, IComparable
 {
     [Key]
     [Column("id")]
@@ -51,6 +51,8 @@ public class Film : IEquatable<Film>
         Genres = [];
     }
 
+    #region Equals & Hashcode
+
     public bool Equals(Film? other)
     {
         if (other is null) return false;
@@ -66,11 +68,6 @@ public class Film : IEquatable<Film>
         return Equals((Film)obj);
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Title, ReleaseDate, Genres);
-    }
-
     public static bool operator ==(Film? left, Film? right)
     {
         return Equals(left, right);
@@ -80,4 +77,33 @@ public class Film : IEquatable<Film>
     {
         return !Equals(left, right);
     }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Title, ReleaseDate, Genres);
+    }
+
+    #endregion
+
+    #region Coparators
+
+    public int CompareTo(Film? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (other is null) return 1;
+        var titleComparison = string.Compare(Title, other.Title, StringComparison.Ordinal);
+        if (titleComparison != 0) return titleComparison;
+        return ReleaseDate.CompareTo(other.ReleaseDate);
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (obj is null) return 1;
+        if (ReferenceEquals(this, obj)) return 0;
+        return obj is Film other
+            ? CompareTo(other)
+            : throw new ArgumentException($"Object must be of type {nameof(Film)}");
+    }
+
+    #endregion
 }

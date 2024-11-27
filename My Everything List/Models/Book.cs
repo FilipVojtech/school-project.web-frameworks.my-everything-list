@@ -5,7 +5,7 @@ using My_Everything_List.Services.GoogleBooksService;
 namespace My_Everything_List.Models;
 
 [Table("books")]
-public class Book : IEquatable<Book>
+public class Book : IEquatable<Book>, IComparable<Book>
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -55,6 +55,8 @@ public class Book : IEquatable<Book>
         Isbn = volumeInfo.industryIdentifiers.FirstOrDefault()?.identifier ?? null;
     }
 
+    #region Equals & HashCode
+
     public bool Equals(Book? other)
     {
         if (other is null) return false;
@@ -70,11 +72,6 @@ public class Book : IEquatable<Book>
         return Equals((Book)obj);
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Title, Authors, Isbn);
-    }
-
     public static bool operator ==(Book? left, Book? right)
     {
         return Equals(left, right);
@@ -84,4 +81,31 @@ public class Book : IEquatable<Book>
     {
         return !Equals(left, right);
     }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Title, Authors, Isbn);
+    }
+
+    #endregion
+
+    #region Comparators
+
+    public int CompareTo(Book? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (other is null) return 1;
+        return string.Compare(Title, other.Title, StringComparison.Ordinal);
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (obj is null) return 1;
+        if (ReferenceEquals(this, obj)) return 0;
+        return obj is Book other
+            ? CompareTo(other)
+            : throw new ArgumentException($"Object must be of type {nameof(Book)}");
+    }
+
+    #endregion
 }

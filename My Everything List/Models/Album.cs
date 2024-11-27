@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace My_Everything_List.Models;
 
-public class Album : MusicItem, IEquatable<Album>
+public class Album : MusicItem, IEquatable<Album>, IComparable<Album>
 {
     public Album(string name, string? image, string artist) : base(name, image)
     {
@@ -11,8 +11,9 @@ public class Album : MusicItem, IEquatable<Album>
 
     public override MusicItemType ItemType { get; set; } = MusicItemType.Album;
 
-    [Column("artist")]
-    public string Artist { get; set; }
+    [Column("artist")] public string Artist { get; set; }
+
+    #region Equals & HashCode
 
     public bool Equals(Album? other)
     {
@@ -29,11 +30,6 @@ public class Album : MusicItem, IEquatable<Album>
         return Equals((Album)obj);
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(base.GetHashCode(), Artist);
-    }
-
     public static bool operator ==(Album? left, Album? right)
     {
         return Equals(left, right);
@@ -43,4 +39,33 @@ public class Album : MusicItem, IEquatable<Album>
     {
         return !Equals(left, right);
     }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(base.GetHashCode(), Artist);
+    }
+
+    #endregion
+
+    #region Comparators
+
+    public int CompareTo(Album? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (other is null) return 1;
+        var musicItemComparison = base.CompareTo(other);
+        if (musicItemComparison != 0) return musicItemComparison;
+        return string.Compare(Artist, other.Artist, StringComparison.Ordinal);
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (obj is null) return 1;
+        if (ReferenceEquals(this, obj)) return 0;
+        return obj is Album other
+            ? CompareTo(other)
+            : throw new ArgumentException($"Object must be of type {nameof(Album)}");
+    }
+
+    #endregion
 }

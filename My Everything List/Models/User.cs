@@ -38,6 +38,8 @@ public class User : IEquatable<User>
         Role = role;
     }
 
+    #region Equals & HashCode
+
     public bool Equals(User? other)
     {
         if (other is null) return false;
@@ -53,11 +55,6 @@ public class User : IEquatable<User>
         return Equals((User)obj);
     }
 
-    public override int GetHashCode()
-    {
-        return (Email != null ? Email.GetHashCode() : 0);
-    }
-
     public static bool operator ==(User? left, User? right)
     {
         return Equals(left, right);
@@ -67,4 +64,11 @@ public class User : IEquatable<User>
     {
         return !Equals(left, right);
     }
+
+    public override int GetHashCode()
+    {
+        return (Email != null ? Email.GetHashCode() : 0);
+    }
+
+    #endregion
 }

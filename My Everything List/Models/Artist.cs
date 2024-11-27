@@ -8,6 +8,8 @@ public class Artist : MusicItem, IEquatable<Artist>
 
     public override MusicItemType ItemType { get; set; } = MusicItemType.Artist;
 
+    #region Equals & HashCode
+
     public bool Equals(Artist? other)
     {
         if (other is null) return false;
@@ -23,11 +25,6 @@ public class Artist : MusicItem, IEquatable<Artist>
         return Equals((Artist)obj);
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(base.GetHashCode(), (int)ItemType);
-    }
-
     public static bool operator ==(Artist? left, Artist? right)
     {
         return Equals(left, right);
@@ -37,4 +34,11 @@ public class Artist : MusicItem, IEquatable<Artist>
     {
         return !Equals(left, right);
     }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(base.GetHashCode(), (int)ItemType);
+    }
+
+    #endregion
 }
