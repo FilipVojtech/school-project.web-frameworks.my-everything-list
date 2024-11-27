@@ -7,7 +7,7 @@ namespace My_Everything_List.Services.LastfmService;
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-[XmlRoot(Namespace = "", IsNullable = false)]
+[XmlRoot(Namespace = "", IsNullable = false, ElementName = "results")]
 public class AlbumsSearchResults
 {
     private AlbumQuery queryField;
