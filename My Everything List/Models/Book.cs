@@ -5,30 +5,26 @@ using My_Everything_List.Services.GoogleBooksService;
 namespace My_Everything_List.Models;
 
 [Table("books")]
-public class Book
+public class Book : IEquatable<Book>
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("id")]
     public int Id { get; set; }
 
-    [Column("title")]
-    public string Title { get; set; }
+    [Column("title")] public string Title { get; set; }
 
-    [Column("description")]
-    public string? Description { get; set; }
+    [Column("description")] public string? Description { get; set; }
 
-    [Column("authors")]
-    public string[] Authors { get; set; }
+    [Column("authors")] public string[] Authors { get; set; }
 
     [Column("image")]
     [DataType(DataType.Url)]
     public string? Image { get; set; }
 
-    [Column("isbn")]
-    public string? Isbn { get; set; }
+    [Column("isbn")] public string? Isbn { get; set; }
 
-    public ICollection<User>? SavedBy { get; set; }
+    public ICollection<User> SavedBy { get; set; } = default!;
 
     public Book()
     {
@@ -55,6 +51,37 @@ public class Book
         {
             Image = volumeInfo.imageLinks.thumbnail;
         }
+
         Isbn = volumeInfo.industryIdentifiers.FirstOrDefault()?.identifier ?? null;
+    }
+
+    public bool Equals(Book? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Title == other.Title && Authors.Equals(other.Authors) && Isbn == other.Isbn;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Book)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Title, Authors, Isbn);
+    }
+
+    public static bool operator ==(Book? left, Book? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(Book? left, Book? right)
+    {
+        return !Equals(left, right);
     }
 }

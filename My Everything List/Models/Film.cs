@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace My_Everything_List.Models;
 
 [Table("film")]
-public class Film
+public class Film : IEquatable<Film>
 {
     [Key]
     [Column("id")]
@@ -26,7 +26,7 @@ public class Film
     [StringLength(32)]
     public string? Image { get; set; }
 
-    public ICollection<User>? SavedBy { get; set; }
+    public ICollection<User> SavedBy { get; set; } = default!;
 
     public Film(string? title, DateOnly releaseDate, string[] genres, string? description, string? image)
     {
@@ -49,5 +49,35 @@ public class Film
     public Film()
     {
         Genres = [];
+    }
+
+    public bool Equals(Film? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate) && Equals(Genres, other.Genres);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Film)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Title, ReleaseDate, Genres);
+    }
+
+    public static bool operator ==(Film? left, Film? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(Film? left, Film? right)
+    {
+        return !Equals(left, right);
     }
 }
