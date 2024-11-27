@@ -1,6 +1,8 @@
-@using My_Everything_List.Services.TmdbService
-@inject ITmdbService TmdbService
 @rendermode InteractiveServer
+
+@inject ITmdbService TmdbService
+
+@using My_Everything_List.Services.TmdbService
 
 <Card Id="@Id.ToString()" class="film-item user-select-none cursor-pointer interactive" @onclick="OnClick">
     <CardBody class="d-flex">
