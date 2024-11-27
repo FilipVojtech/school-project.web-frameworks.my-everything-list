@@ -3,27 +3,31 @@
 @attribute [Authorize(Roles = "Admin,User")]
 
 @inject NavigationManager Navigation
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject NavigationManager NavigationManager
 
 @using Microsoft.AspNetCore.Authorization
-@using Film = My_Everything_List.Models.Film
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
 
 <div class="container-fluid d-flex justify-content-between">
     <h3>Films</h3>
     <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
 </div>
 
-    @foreach (var film in _films)
-    {
-        <FilmItem
-            Id="film.Id"
-            Title="@film.Title"
-            Description="@film.Description"
-            Genres="@film.Genres"
-            Image="@film.Image"
-            ReleaseDate="@film.ReleaseDate"
-            OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
-        />
-    }
+@foreach (var film in _films)
+{
+    <FilmItem
+        Id="film.Id"
+        Title="@film.Title"
+        Description="@film.Description"
+        Genres="@film.Genres"
+        Image="@film.Image"
+        ReleaseDate="@film.ReleaseDate"
+        OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
+    />
+}
 
 @code {
     private List<Film> _films = [];
@@ -32,6 +36,18 @@
     {
         _films.Add(film);
         StateHasChanged();
+
+        using var context = DbFactory.CreateDbContext();
+        context.Film.Add(film);
+        context.SaveChanges();
+        NavigationManager.NavigateTo("/users");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+        _films = await context.Film.ToListAsync();
+        await base.OnInitializedAsync();
     }
 
 }
