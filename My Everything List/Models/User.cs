@@ -6,17 +6,6 @@ namespace My_Everything_List.Models;
 [Table("users")]
 public class User
 {
-    public User()
-    {
-    }
-
-    public User(string? email, string? password, string? role)
-    {
-        Email = email;
-        Password = password;
-        Role = role;
-    }
-
     [Key]
     [Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -31,4 +20,21 @@ public class User
     public string? Password { get; set; }
 
     [Column("role")] public string? Role { get; set; } = "User";
+
+    public ICollection<Film> SavedFilms { get; set; } = [];
+
+    public ICollection<Book> SavedBooks { get; set; } = [];
+
+    public ICollection<MusicItem> SavedMusic { get; set; } = [];
+
+    public User()
+    {
+    }
+
+    public User(string? email, string? password, string? role)
+    {
+        Email = email;
+        Password = password;
+        Role = role;
+    }
 }
