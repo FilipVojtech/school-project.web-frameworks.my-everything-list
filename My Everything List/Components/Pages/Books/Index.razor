@@ -67,24 +67,21 @@
         // If book is not in DB
         if (bookInDb is null)
         {
-            // Implicitly, it cannot be saved by user
-            //Add it to users saved books and therefore add it to DB as well
-            context.User.First(u => u == _currentUser).SavedBooks.Add(book);
-            context.SaveChanges();
-
-            _books.Add(book);
-            StateHasChanged();
+            // Add it
+            bookInDb = context.Books.Add(book).Entity;
         }
-        // Book is in DB
+
+        // Book is now in DB
         // Check that it is not already saved by user
-        else if (!_books.Contains(bookInDb))
+        if (!_books.Any(b => b.Book == bookInDb))
         {
+            var dbUser = context.User.First(u => u == _currentUser);
             // If not, save it to users saved books
             // Use the bookInDb var to not add duplicate
-            context.User.First(u => u == _currentUser).SavedBooks.Add(bookInDb);
+            dbUser.SavedBooks.Add(bookInDb);
             context.SaveChanges();
 
-            _books.Add(book);
+            _books = dbUser.UsersBooks;
             StateHasChanged();
         }
     }
