@@ -32,27 +32,47 @@
 
 @code {
     private List<Film> _films = [];
-    private User? _currentUser;
-
-    private void OnItemSelected(object? sender, Film film)
-    {
-        _films.Add(film);
-        StateHasChanged();
-
-        using var context = DbFactory.CreateDbContext();
-        context.User.First(u => u == _currentUser).SavedFilms.Add(film);
-        context.SaveChanges();
-    }
+    private User _currentUser;
 
     protected override async Task OnInitializedAsync()
     {
-        _currentUser = (await User.GetUser())!;
+        var user = await User.GetUser();
 
-        await using var context = await DbFactory.CreateDbContextAsync();
-        _films = context.User
-            .Include(user => user.SavedFilms)
-            .First(u => u == _currentUser).SavedFilms.ToList();
+        if (user is null) Navigation.NavigateTo("/");
+        else _currentUser = user;
+
+        await using (var context = await DbFactory.CreateDbContextAsync())
+        {
+            _films = context.User
+                .Include(u => u.SavedFilms)
+                .First(u => u == _currentUser).SavedFilms.ToList();
+        }
+
         await base.OnInitializedAsync();
+    }
+
+    private void OnItemSelected(object? sender, Film film)
+    {
+        // TODO: Move logic to FilmService
+        using var context = DbFactory.CreateDbContext();
+        var filmInDb = context.Film.FirstOrDefault(f => f == film);
+
+        if (filmInDb is null)
+        {
+            context.User.First(u => u == _currentUser).SavedFilms.Add(film);
+            context.SaveChanges();
+
+            _films.Add(film);
+            StateHasChanged();
+        }
+        else if (!_films.Contains(filmInDb))
+        {
+            context.User.First(u => u == _currentUser).SavedFilms.Add(filmInDb);
+            context.SaveChanges();
+
+            _films.Add(film);
+            StateHasChanged();
+        }
     }
 
 }
