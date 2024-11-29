@@ -1,6 +1,7 @@
 @page "/books"
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
+@implements IDisposable
 
 @inject NavigationManager Navigation
 @inject IDbContextFactory<MyEverythingListContext> DbFactory
@@ -84,6 +85,10 @@
             _books = dbUser.UsersBooks;
             StateHasChanged();
         }
+    }
+
+    public void Dispose()
+    {
     }
 
 }
