@@ -1,12 +1,9 @@
 @page "/login"
-@attribute [Authorize]
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
-@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.EntityFrameworkCore.Internal
 @using My_Everything_List.Data
 @using My_Everything_List.Models.ViewModels
 
@@ -51,7 +48,7 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authState.User.Identity?.IsAuthenticated ?? false)
+        if (authState.User.Identity?.IsAuthenticated ?? true)
         {
             Navigation.NavigateTo("/", replace: true);
         }
