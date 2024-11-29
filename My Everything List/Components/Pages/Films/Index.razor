@@ -19,8 +19,10 @@
     <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
 </div>
 
-@foreach (var film in _films)
+@foreach (var userFilm in _films)
 {
+    var film = userFilm.Film;
+
     <FilmItem
         Id="film.Id"
         Title="@film.Title"
@@ -30,10 +32,12 @@
         ReleaseDate="@film.ReleaseDate"
         OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
     />
+
+    <p>Rating: @userFilm.Rating</p>
 }
 
 @code {
-    private List<Film> _films = [];
+    private List<UsersFilms> _films = [];
     private User _currentUser;
 
     protected override async Task OnInitializedAsync()
@@ -45,9 +49,11 @@
 
         await using (var context = await DbFactory.CreateDbContextAsync())
         {
-            _films = context.User
-                .Include(u => u.SavedFilms)
-                .First(u => u == _currentUser).SavedFilms.ToList();
+            _films = context.UsersFilms
+                .AsNoTracking()
+                .Where(uf => uf.User == _currentUser)
+                .Include(uf => uf.Film)
+                .ToList();
         }
 
         await base.OnInitializedAsync();
