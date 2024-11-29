@@ -5,28 +5,26 @@ using My_Everything_List.Services.GoogleBooksService;
 namespace My_Everything_List.Models;
 
 [Table("books")]
-public class Book
+public class Book : IEquatable<Book>, IComparable<Book>
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("id")]
     public int Id { get; set; }
 
-    [Column("title")]
-    public string Title { get; set; }
+    [Column("title")] public string Title { get; set; }
 
-    [Column("description")]
-    public string? Description { get; set; }
+    [Column("description")] public string? Description { get; set; }
 
-    [Column("authors")]
-    public string[] Authors { get; set; }
+    [Column("authors")] public string[] Authors { get; set; }
 
     [Column("image")]
     [DataType(DataType.Url)]
     public string? Image { get; set; }
 
-    [Column("isbn")]
-    public string? Isbn { get; set; }
+    [Column("isbn")] public string? Isbn { get; set; }
+
+    public ICollection<User> SavedBy { get; set; } = default!;
 
     public Book()
     {
@@ -53,6 +51,61 @@ public class Book
         {
             Image = volumeInfo.imageLinks.thumbnail;
         }
+
         Isbn = volumeInfo.industryIdentifiers.FirstOrDefault()?.identifier ?? null;
     }
+
+    #region Equals & HashCode
+
+    public bool Equals(Book? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Title == other.Title && Authors.SequenceEqual(other.Authors) && Isbn == other.Isbn;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Book)obj);
+    }
+
+    public static bool operator ==(Book left, Book right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Book left, Book right)
+    {
+        return !left.Equals(right);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Title, Authors, Isbn);
+    }
+
+    #endregion
+
+    #region Comparators
+
+    public int CompareTo(Book? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (other is null) return 1;
+        return string.Compare(Title, other.Title, StringComparison.Ordinal);
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (obj is null) return 1;
+        if (ReferenceEquals(this, obj)) return 0;
+        return obj is Book other
+            ? CompareTo(other)
+            : throw new ArgumentException($"Object must be of type {nameof(Book)}");
+    }
+
+    #endregion
 }

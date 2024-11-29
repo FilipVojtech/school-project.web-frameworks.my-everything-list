@@ -4,11 +4,13 @@
 
 @inject NavigationManager Navigation
 @inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject IUserService User
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using My_Everything_List.Data
 @using My_Everything_List.Models
+@using My_Everything_List.Services.UserService
 
 <div class="container-fluid d-flex justify-content-between mb-3">
     <h3>Songs</h3>
@@ -65,22 +67,50 @@
 
 @code {
     List<MusicItem> _musicItems = [];
+    private User _currentUser;
 
     protected override async Task OnInitializedAsync()
     {
-        await using var context = await DbFactory.CreateDbContextAsync();
-        _musicItems = context.MusicItems.ToList();
+        var user = await User.GetUser();
+
+        if (user is null) Navigation.NavigateTo("/");
+        else _currentUser = user;
+
+        await using (var context = await DbFactory.CreateDbContextAsync())
+        {
+            _musicItems = context.User
+                .Include(u => u.SavedMusic)
+                .First(u => u == _currentUser).SavedMusic.ToList();
+        }
+
         await base.OnInitializedAsync();
     }
 
     private void AddMusicItem(MusicItem item)
     {
+        // TODO: Move logic to MusicService
+        using var context = DbFactory.CreateDbContext();
+        var musicInDb = context.MusicItems.FirstOrDefault(m => m == item);
+
+        if (musicInDb is null)
+        {
+            context.User.First(u => u == _currentUser).SavedMusic.Add(item);
+            context.SaveChanges();
+
+            _musicItems.Add(item);
+            StateHasChanged();
+        }
+        else if (_musicItems.Contains(musicInDb))
+        {
+            context.User.First(u => u == _currentUser).SavedMusic.Add(musicInDb);
+            context.SaveChanges();
+
+            _musicItems.Add(item);
+            StateHasChanged();
+        }
+
         _musicItems.Add(item);
         StateHasChanged();
-
-        using var context = DbFactory.CreateDbContext();
-        context.MusicItems.Add(item);
-        context.SaveChanges();
     }
 
 }

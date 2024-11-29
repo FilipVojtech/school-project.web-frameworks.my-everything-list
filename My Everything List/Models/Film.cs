@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace My_Everything_List.Models;
 
 [Table("film")]
-public class Film
+public class Film : IEquatable<Film>, IComparable<Film>, IComparable
 {
     [Key]
     [Column("id")]
@@ -15,7 +15,7 @@ public class Film
 
     [Column("release_date")] public DateOnly ReleaseDate { get; set; }
 
-    [Column("genres")] public List<string>? Genres { get; set; }
+    [Column("genres")] public List<string> Genres { get; set; }
 
     [Column("description")]
     [StringLength(512)]
@@ -25,6 +25,8 @@ public class Film
     [DataType(DataType.Url)]
     [StringLength(32)]
     public string? Image { get; set; }
+
+    public ICollection<User> SavedBy { get; set; } = default!;
 
     public Film(string? title, DateOnly releaseDate, string[] genres, string? description, string? image)
     {
@@ -39,7 +41,7 @@ public class Film
     {
         Title = tmdbFilm.title;
         ReleaseDate = DateOnly.Parse(tmdbFilm.release_date);
-        Genres = tmdbFilm.genres?.Select(genre => genre.name).ToList() ?? null;
+        Genres = tmdbFilm.genres?.Select(genre => genre.name).ToList() ?? [];
         Description = tmdbFilm.tagline;
         Image = tmdbFilm.poster_path;
     }
@@ -48,4 +50,60 @@ public class Film
     {
         Genres = [];
     }
+
+    #region Equals & Hashcode
+
+    public bool Equals(Film? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate) && Genres.SequenceEqual(other.Genres);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Film)obj);
+    }
+
+    public static bool operator ==(Film left, Film right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Film left, Film right)
+    {
+        return !left.Equals(right);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Title, ReleaseDate, Genres);
+    }
+
+    #endregion
+
+    #region Coparators
+
+    public int CompareTo(Film? other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (other is null) return 1;
+        var titleComparison = string.Compare(Title, other.Title, StringComparison.Ordinal);
+        if (titleComparison != 0) return titleComparison;
+        return ReleaseDate.CompareTo(other.ReleaseDate);
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (obj is null) return 1;
+        if (ReferenceEquals(this, obj)) return 0;
+        return obj is Film other
+            ? CompareTo(other)
+            : throw new ArgumentException($"Object must be of type {nameof(Film)}");
+    }
+
+    #endregion
 }

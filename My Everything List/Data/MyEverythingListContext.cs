@@ -20,13 +20,16 @@ public class MyEverythingListContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // MusicItem
         modelBuilder.Entity<MusicItem>()
             .HasDiscriminator(e => e.ItemType);
 
+        // Artists
         modelBuilder.Entity<Artist>()
             .HasDiscriminator(a => a.ItemType)
             .HasValue(MusicItemType.Artist);
 
+        // Albums
         modelBuilder.Entity<Album>()
             .HasDiscriminator(a => a.ItemType)
             .HasValue(MusicItemType.Album);
@@ -34,11 +37,29 @@ public class MyEverythingListContext : DbContext
             .Property(a => a.Artist)
             .HasColumnName("artist");
 
+        // Songs
         modelBuilder.Entity<Song>()
             .HasDiscriminator(s => s.ItemType)
             .HasValue(MusicItemType.Track);
         modelBuilder.Entity<Song>()
             .Property(s => s.Artist)
             .HasColumnName("artist");
+
+        // User
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity
+                .HasMany(e => e.SavedFilms)
+                .WithMany(e => e.SavedBy)
+                .UsingEntity("users_films");
+            entity
+                .HasMany(e => e.SavedBooks)
+                .WithMany(e => e.SavedBy)
+                .UsingEntity("users_books");
+            entity
+                .HasMany(e => e.SavedMusic)
+                .WithMany(e => e.SavedBy)
+                .UsingEntity("users_music");
+        });
     }
 }

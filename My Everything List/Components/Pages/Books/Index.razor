@@ -4,11 +4,13 @@
 
 @inject NavigationManager Navigation
 @inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject IUserService User
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using My_Everything_List.Data
 @using My_Everything_List.Models
+@using My_Everything_List.Services.UserService
 
 <div class="container-fluid d-flex justify-content-between mb-3">
     <h3>Books</h3>
@@ -30,22 +32,54 @@
 
 @code {
     private List<Book> _books = [];
+    private User _currentUser;
 
     protected override async Task OnInitializedAsync()
     {
-        await using var context = await DbFactory.CreateDbContextAsync();
-        _books = context.Books.ToList();
+        var user = await User.GetUser();
+
+        if (user is null) Navigation.NavigateTo("/");
+        else _currentUser = user;
+
+        await using (var context = await DbFactory.CreateDbContextAsync())
+        {
+            _books = context.User
+                .Include(u => u.SavedBooks)
+                .First(u => u == _currentUser).SavedBooks.ToList();
+        }
+
         await base.OnInitializedAsync();
     }
 
     private void OnItemSelected(object? sender, Book book)
     {
-        _books.Add(book);
-        StateHasChanged();
-
+        // TODO: Move logic to BookService
         using var context = DbFactory.CreateDbContext();
-        context.Books.Add(book);
-        context.SaveChanges();
+        var bookInDb = context.Books.FirstOrDefault(b => b.Isbn == book.Isbn);
+
+        // If book is not in DB
+        if (bookInDb is null)
+        {
+            // Implicitly, it cannot be saved by user
+            //Add it to users saved books and therefore add it to DB as well
+            context.User.First(u => u == _currentUser).SavedBooks.Add(book);
+            context.SaveChanges();
+
+            _books.Add(book);
+            StateHasChanged();
+        }
+        // Book is in DB
+        // Check that it is not already saved by user
+        else if (!_books.Contains(bookInDb))
+        {
+            // If not, save it to users saved books
+            // Use the bookInDb var to not add duplicate
+            context.User.First(u => u == _currentUser).SavedBooks.Add(bookInDb);
+            context.SaveChanges();
+
+            _books.Add(book);
+            StateHasChanged();
+        }
     }
 
 }
