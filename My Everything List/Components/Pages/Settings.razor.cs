@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Components;
-
 namespace My_Everything_List.Components.Pages;
 
-public partial class Settings : ComponentBase
+public partial class Settings
 {
     private int? _id;
 
