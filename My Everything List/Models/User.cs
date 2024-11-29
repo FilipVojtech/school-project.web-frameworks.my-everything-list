@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace My_Everything_List.Models;
 
 [Table("users")]
+[Index(nameof(Email), IsUnique = true)]
 public class User : IEquatable<User>
 {
     [Key]
@@ -19,13 +21,19 @@ public class User : IEquatable<User>
     [DataType(DataType.Password)]
     public string? Password { get; set; }
 
-    [Column("role")] public string? Role { get; set; } = "User";
+    [Column("role")] [StringLength(5)] public string? Role { get; set; } = "User";
 
-    public ICollection<Film> SavedFilms { get; set; } = [];
+    public List<Film> SavedFilms { get; } = [];
 
-    public ICollection<Book> SavedBooks { get; set; } = [];
+    public List<UsersFilms> UsersFilms { get; } = [];
 
-    public ICollection<MusicItem> SavedMusic { get; set; } = [];
+    public List<Book> SavedBooks { get; } = [];
+
+    public List<UsersBooks> UsersBooks { get; } = [];
+
+    public List<MusicItem> SavedMusic { get; } = [];
+
+    public List<UsersMusic> UsersMusic { get; } = [];
 
     public User()
     {

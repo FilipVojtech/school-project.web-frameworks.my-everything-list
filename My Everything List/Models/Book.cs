@@ -24,7 +24,9 @@ public class Book : IEquatable<Book>, IComparable<Book>
 
     [Column("isbn")] public string? Isbn { get; set; }
 
-    public ICollection<User> SavedBy { get; set; } = default!;
+    public List<User> SavedBy { get; } = [];
+
+    public List<UsersBooks> UsersBooks { get; } = [];
 
     public Book()
     {

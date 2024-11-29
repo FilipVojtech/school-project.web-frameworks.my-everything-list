@@ -26,7 +26,9 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
     [StringLength(32)]
     public string? Image { get; set; }
 
-    public ICollection<User> SavedBy { get; set; } = default!;
+    public List<User> SavedBy { get; } = default!;
+
+    public List<UsersFilms> UsersFilms { get; } = default!;
 
     public Film(string? title, DateOnly releaseDate, string[] genres, string? description, string? image)
     {

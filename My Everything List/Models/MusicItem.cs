@@ -25,7 +25,9 @@ public abstract class MusicItem : IEquatable<MusicItem>, IComparable<MusicItem>,
     [DataType(DataType.Url)]
     public string? Image { get; set; }
 
-    public ICollection<User>? SavedBy { get; set; } = default!;
+    public List<User> SavedBy { get; } = default!;
+
+    public List<UsersMusic> UsersMusic { get; } = default!;
 
     #region Equals & HashCode
 
