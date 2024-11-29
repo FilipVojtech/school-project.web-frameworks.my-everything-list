@@ -1,8 +1,11 @@
 @page "/films"
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
+@implements IDisposable
+@implements IAsyncDisposable
 
 @inject NavigationManager Navigation
+@inject MyEverythingListContext Context
 @inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject IUserService User
 
@@ -81,6 +84,16 @@
             _films.Add(film);
             StateHasChanged();
         }
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (Context != null) await Context.DisposeAsync();
     }
 
 }
