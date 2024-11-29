@@ -1,13 +1,18 @@
 @page "/login"
+@attribute [Authorize]
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore.Internal
 @using My_Everything_List.Data
 @using My_Everything_List.Models.ViewModels
 
-@inject MyEverythingListContext DbContext
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
 
@@ -43,10 +48,20 @@
 
     private string? _errorMessage = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated ?? false)
+        {
+            Navigation.NavigateTo("/", replace: true);
+        }
+    }
+
     private async Task Authenticate()
     {
-        var userAccount = DbContext.User.FirstOrDefault(user => user.Email == Model.Email);
-        if (userAccount == null || userAccount.Password != Model.Password)
+        await using var context = await DbFactory.CreateDbContextAsync();
+        var userAccount = context.User.FirstOrDefault(user => user.Email == Model.Email);
+        if (userAccount is null || userAccount.Password != Model.Password)
         {
             _errorMessage = "Incorrect credentials.";
             return;
@@ -55,8 +70,8 @@
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, userAccount.Id.ToString()),
-            new(ClaimTypes.Email, Model.Email),
-            new(ClaimTypes.Role, userAccount.Role)
+            new(ClaimTypes.Email, userAccount.Email!),
+            new(ClaimTypes.Role, userAccount.Role!)
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

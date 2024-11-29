@@ -4,12 +4,14 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.EntityFrameworkCore
 @using My_Everything_List.Data
 @using My_Everything_List.Models
 @using My_Everything_List.Models.ViewModels
 
-@inject MyEverythingListContext DbContext
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Register</PageTitle>
 
@@ -52,9 +54,19 @@
 
     private string? _errorMessage = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated ?? false)
+        {
+            Navigation.NavigateTo("/", replace: true);
+        }
+    }
+
     private async Task RegisterUser()
     {
-        var isEmailInUse = DbContext.User.Any(user => user.Email == Model.Email);
+        await using var context = await DbFactory.CreateDbContextAsync();
+        var isEmailInUse = context.User.Any(user => user.Email == Model.Email);
 
         if (isEmailInUse)
         {
@@ -62,14 +74,14 @@
             return;
         }
 
-        var userAccount = DbContext.User.Add(new User(Model.Email, Model.Password, "User"));
-        await DbContext.SaveChangesAsync();
+        var userAccount = context.User.Add(new User(Model.Email, Model.Password, "User")).Entity;
+        await context.SaveChangesAsync();
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, userAccount.Entity.Id.ToString()),
-            new(ClaimTypes.Email, userAccount.Entity.Email),
-            new(ClaimTypes.Role, userAccount.Entity.Role)
+            new(ClaimTypes.NameIdentifier, userAccount.Id.ToString()),
+            new(ClaimTypes.Email, userAccount.Email!),
+            new(ClaimTypes.Role, userAccount.Role!)
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
