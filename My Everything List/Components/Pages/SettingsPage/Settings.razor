@@ -1,11 +1,7 @@
 @page "/settings"
-@rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
 
 @using Microsoft.AspNetCore.Authorization
-@using My_Everything_List.Services.UserService
-
-@inject IUserService UserService
 
 <PageTitle>Settings</PageTitle>
 
@@ -13,10 +9,4 @@
     <h3>Settings</h3>
 </div>
 
-<ul>
-    <SettingsItem Title="Delete Account" OnClickCallback="DeleteAccount"/>
-</ul>
-
-<p>@_id</p>
-<p>@_email</p>
-<p>@_role</p>
+<DeleteAccount/>
