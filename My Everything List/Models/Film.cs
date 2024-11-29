@@ -15,7 +15,7 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
 
     [Column("release_date")] public DateOnly ReleaseDate { get; set; }
 
-    [Column("genres")] public List<string>? Genres { get; set; }
+    [Column("genres")] public List<string> Genres { get; set; }
 
     [Column("description")]
     [StringLength(512)]
@@ -41,7 +41,7 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
     {
         Title = tmdbFilm.title;
         ReleaseDate = DateOnly.Parse(tmdbFilm.release_date);
-        Genres = tmdbFilm.genres?.Select(genre => genre.name).ToList() ?? null;
+        Genres = tmdbFilm.genres?.Select(genre => genre.name).ToList() ?? [];
         Description = tmdbFilm.tagline;
         Image = tmdbFilm.poster_path;
     }
@@ -57,7 +57,7 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate) && Equals(Genres, other.Genres);
+        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate) && Genres.SequenceEqual(other.Genres);
     }
 
     public override bool Equals(object? obj)

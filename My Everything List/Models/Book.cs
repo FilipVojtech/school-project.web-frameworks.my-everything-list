@@ -61,7 +61,7 @@ public class Book : IEquatable<Book>, IComparable<Book>
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Title == other.Title && Authors.Equals(other.Authors) && Isbn == other.Isbn;
+        return Title == other.Title && Authors.SequenceEqual(other.Authors) && Isbn == other.Isbn;
     }
 
     public override bool Equals(object? obj)
