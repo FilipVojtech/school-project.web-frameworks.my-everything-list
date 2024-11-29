@@ -6,7 +6,6 @@
 
 @inject NavigationManager Navigation
 @inject MyEverythingListContext Context
-@inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject IUserService User
 
 @using Microsoft.AspNetCore.Authorization
@@ -101,27 +100,13 @@
     private void AddMusicItem(MusicItem item)
     {
         // TODO: Move logic to MusicService
-        using var context = DbFactory.CreateDbContext();
-        var musicInDb = context.MusicItems.FirstOrDefault(m => m == item);
+        var musicInDb = Context.MusicItems.FirstOrDefault(m => m == item)
+                        ?? Context.MusicItems.Add(item).Entity;
 
-        if (musicInDb is null)
-        {
-            context.User.First(u => u == _currentUser).SavedMusic.Add(item);
-            context.SaveChanges();
+        if (_currentUser.SavedMusic.Contains(musicInDb)) return;
 
-            _musicItems.Add(item);
-            StateHasChanged();
-        }
-        else if (_musicItems.Contains(musicInDb))
-        {
-            context.User.First(u => u == _currentUser).SavedMusic.Add(musicInDb);
-            context.SaveChanges();
-
-            _musicItems.Add(item);
-            StateHasChanged();
-        }
-
-        _musicItems.Add(item);
+        _currentUser.SavedMusic.Add(musicInDb);
+        Context.SaveChanges();
         StateHasChanged();
     }
 
