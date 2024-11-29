@@ -61,12 +61,10 @@
         var filmInDb = Context.Film.FirstOrDefault(f => f == film)
                        ?? Context.Film.Add(film).Entity;
 
-        if (!_currentUser.SavedFilms.Contains(filmInDb))
-        {
-            _currentUser.SavedFilms.Add(filmInDb);
-            Context.SaveChanges();
-            StateHasChanged();
-        }
+        if (_currentUser.SavedFilms.Contains(filmInDb)) return;
+        _currentUser.SavedFilms.Add(filmInDb);
+        Context.SaveChanges();
+        StateHasChanged();
     }
 
     public void Dispose()
