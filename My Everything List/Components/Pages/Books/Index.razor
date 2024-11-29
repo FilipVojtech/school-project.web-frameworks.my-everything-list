@@ -4,7 +4,7 @@
 @implements IDisposable
 
 @inject NavigationManager Navigation
-@inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject MyEverythingListContext Context
 @inject IUserService User
 
 @using Microsoft.AspNetCore.Authorization
@@ -20,7 +20,7 @@
     <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
 </div>
 
-@foreach (var userBook in _books)
+@foreach (var userBook in _currentUser.UsersBooks)
 {
     var book = userBook.Book;
 
@@ -37,24 +37,18 @@
 }
 
 @code {
-    private List<UsersBooks> _books = [];
-    private User _currentUser;
+    private User _currentUser = default!;
 
     protected override async Task OnInitializedAsync()
     {
         var user = await User.GetUser();
 
         if (user is null) Navigation.NavigateTo("/");
-        else _currentUser = user;
-
-        await using (var context = await DbFactory.CreateDbContextAsync())
-        {
-            _books = context.UsersBooks
-                .AsNoTracking()
-                .Where(ub => ub.User == _currentUser)
-                .Include(ub => ub.Book)
-                .ToList();
-        }
+        else
+            _currentUser = Context.User
+                .Include(u => u.UsersBooks)
+                .Include(u => u.SavedBooks)
+                .First(u => u == user);
 
         await base.OnInitializedAsync();
     }
@@ -62,33 +56,23 @@
     private void OnItemSelected(object? sender, Book book)
     {
         // TODO: Move logic to BookService
-        using var context = DbFactory.CreateDbContext();
-        var bookInDb = context.Books.FirstOrDefault(b => b.Isbn == book.Isbn);
-
         // If book is not in DB
-        if (bookInDb is null)
-        {
-            // Add it
-            bookInDb = context.Books.Add(book).Entity;
-        }
+        // Add it
+        var bookInDb = Context.Books.FirstOrDefault(b => b.Isbn == book.Isbn)
+                       ?? Context.Books.Add(book).Entity;
 
-        // Book is now in DB
         // Check that it is not already saved by user
-        if (!_books.Any(b => b.Book == bookInDb))
-        {
-            var dbUser = context.User.First(u => u == _currentUser);
-            // If not, save it to users saved books
-            // Use the bookInDb var to not add duplicate
-            dbUser.SavedBooks.Add(bookInDb);
-            context.SaveChanges();
-
-            _books = dbUser.UsersBooks;
-            StateHasChanged();
-        }
+        if (_currentUser.SavedBooks.Contains(bookInDb)) return;
+        // If not, save it to users saved books
+        // Use the entity
+        _currentUser.SavedBooks.Add(bookInDb);
+        Context.SaveChanges();
+        StateHasChanged();
     }
 
     public void Dispose()
     {
+        Context.Dispose();
     }
 
 }
