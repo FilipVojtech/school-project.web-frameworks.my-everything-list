@@ -18,19 +18,23 @@
 <PageTitle>Your Music</PageTitle>
 
 <div class="container-fluid d-flex justify-content-between mb-3">
-    <h3>Songs</h3>
+    <h3>Music</h3>
     <SearchMusicModal ButtonTitle="Add Music" OnItemSelected="(_, song) => AddMusicItem(song)"/>
 </div>
 
 @{
-    var artists = _musicItems.FindAll(item => item.ItemType == MusicItemType.Artist);
-    var albums = _musicItems.FindAll(item => item.ItemType == MusicItemType.Album);
-    var tracks = _musicItems.FindAll(item => item.ItemType == MusicItemType.Track);
+    var artists = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Artist);
+    var albums = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Album);
+    var tracks = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Track);
+}
 
-    if (tracks.Count > 0)
-    {
-        foreach (var track in tracks.Cast<Song>())
+@if (tracks.Count > 0)
+{
+    <div class="m-1">
+        <h3>Songs</h3>
+        @foreach (var userTrack in tracks)
         {
+            var track = (Song)userTrack.MusicItem;
             <SongItem
                 Id="@track.Id.ToString()"
                 Title="@track.Name"
@@ -39,13 +43,16 @@
                 OnClick='() => Navigation.NavigateTo($"/songs/song/{track.Id}")'
             />
         }
-    }
+    </div>
+}
 
-    if (artists.Count > 0)
-    {
+@if (artists.Count > 0)
+{
+    <div class="m-1">
         <h3>Artists</h3>
-        @foreach (var artist in artists.Cast<Artist>())
+        @foreach (var userArtist in artists)
         {
+            var artist = (Artist)userArtist.MusicItem;
             <ArtistItem
                 Id="@artist.Id.ToString()"
                 Title="@artist.Name"
@@ -53,25 +60,28 @@
                 OnClick='()=>Navigation.NavigateTo($"/songs/artist/{artist.Id}")'
             />
         }
-    }
+    </div>
+}
 
-    if (albums.Count > 0)
-    {
+@if (albums.Count > 0)
+{
+    <div class="m-1">
         <h3>Albums</h3>
-        @foreach (var album in albums.Cast<Album>())
+        @foreach (var userAlbum in albums)
         {
+            var album = (Album)userAlbum.MusicItem;
             <AlbumItem
                 Id="@album.Id.ToString()"
                 Title="@album.Name"
                 Image="@album.Image"
+                Artist="@album.Artist"
                 OnClick='() => Navigation.NavigateTo($"/songs/album/{album.Id}")'
             />
         }
-    }
+    </div>
 }
 
 @code {
-    List<MusicItem> _musicItems = [];
     private User _currentUser;
 
     protected override async Task OnInitializedAsync()
@@ -79,14 +89,11 @@
         var user = await User.GetUser();
 
         if (user is null) Navigation.NavigateTo("/");
-        else _currentUser = user;
-
-        await using (var context = await DbFactory.CreateDbContextAsync())
-        {
-            _musicItems = context.User
+        else
+            _currentUser = Context.User
+                .Include(u => u.UsersMusic)
                 .Include(u => u.SavedMusic)
-                .First(u => u == _currentUser).SavedMusic.ToList();
-        }
+                .First(u => u == user);
 
         await base.OnInitializedAsync();
     }
