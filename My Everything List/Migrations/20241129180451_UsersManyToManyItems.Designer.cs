@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using My_Everything_List.Data;
 
@@ -10,9 +11,11 @@ using My_Everything_List.Data;
 namespace MyEverythingList.Migrations
 {
     [DbContext(typeof(MyEverythingListContext))]
-    partial class MyEverythingListContextModelSnapshot : ModelSnapshot
+    [Migration("20241129180451_UsersManyToManyItems")]
+    partial class UsersManyToManyItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -154,13 +157,9 @@ namespace MyEverythingList.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("rating");
-
                     b.HasKey("BookId", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "BookId");
 
                     b.ToTable("users_books");
                 });
@@ -175,34 +174,29 @@ namespace MyEverythingList.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("rating");
-
                     b.HasKey("FilmId", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "FilmId");
 
                     b.ToTable("users_films");
                 });
 
             modelBuilder.Entity("My_Everything_List.Models.UsersMusic", b =>
                 {
-                    b.Property<int>("MusicItemId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("music_id");
+                    b.Property<int>("SavedMusicId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("Rating")
+                    b.Property<int>("MusicId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("rating");
+                        .HasColumnName("music_id");
 
-                    b.HasKey("MusicItemId", "UserId");
+                    b.HasKey("SavedMusicId", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "MusicId");
 
                     b.ToTable("users_music");
                 });
@@ -248,33 +242,29 @@ namespace MyEverythingList.Migrations
 
             modelBuilder.Entity("My_Everything_List.Models.UsersBooks", b =>
                 {
-                    b.HasOne("My_Everything_List.Models.Book", "Book")
-                        .WithMany("UsersBooks")
+                    b.HasOne("My_Everything_List.Models.Book", null)
+                        .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("My_Everything_List.Models.User", "User")
-                        .WithMany("UsersBooks")
+                    b.HasOne("My_Everything_List.Models.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("My_Everything_List.Models.UsersFilms", b =>
                 {
                     b.HasOne("My_Everything_List.Models.Film", null)
-                        .WithMany("UsersFilms")
+                        .WithMany()
                         .HasForeignKey("FilmId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("My_Everything_List.Models.User", null)
-                        .WithMany("UsersFilms")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -283,40 +273,16 @@ namespace MyEverythingList.Migrations
             modelBuilder.Entity("My_Everything_List.Models.UsersMusic", b =>
                 {
                     b.HasOne("My_Everything_List.Models.MusicItem", null)
-                        .WithMany("UsersMusic")
-                        .HasForeignKey("MusicItemId")
+                        .WithMany()
+                        .HasForeignKey("SavedMusicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("My_Everything_List.Models.User", null)
-                        .WithMany("UsersMusic")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("My_Everything_List.Models.Book", b =>
-                {
-                    b.Navigation("UsersBooks");
-                });
-
-            modelBuilder.Entity("My_Everything_List.Models.Film", b =>
-                {
-                    b.Navigation("UsersFilms");
-                });
-
-            modelBuilder.Entity("My_Everything_List.Models.MusicItem", b =>
-                {
-                    b.Navigation("UsersMusic");
-                });
-
-            modelBuilder.Entity("My_Everything_List.Models.User", b =>
-                {
-                    b.Navigation("UsersBooks");
-
-                    b.Navigation("UsersFilms");
-
-                    b.Navigation("UsersMusic");
                 });
 #pragma warning restore 612, 618
         }
