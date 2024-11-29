@@ -6,7 +6,6 @@
 
 @inject NavigationManager Navigation
 @inject MyEverythingListContext Context
-@inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject IUserService User
 
 @using Microsoft.AspNetCore.Authorization
@@ -22,7 +21,7 @@
     <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
 </div>
 
-@foreach (var userFilm in _films)
+@foreach (var userFilm in _currentUser.UsersFilms)
 {
     var film = userFilm.Film;
 
@@ -40,7 +39,6 @@
 }
 
 @code {
-    private List<UsersFilms> _films = [];
     private User _currentUser;
 
     protected override async Task OnInitializedAsync()
@@ -48,16 +46,11 @@
         var user = await User.GetUser();
 
         if (user is null) Navigation.NavigateTo("/");
-        else _currentUser = user;
-
-        await using (var context = await DbFactory.CreateDbContextAsync())
-        {
-            _films = context.UsersFilms
-                .AsNoTracking()
-                .Where(uf => uf.User == _currentUser)
-                .Include(uf => uf.Film)
-                .ToList();
-        }
+        else
+            _currentUser = Context.User
+                .Include(u => u.UsersFilms)
+                .Include(u => u.SavedFilms)
+                .First(u => u == user);
 
         await base.OnInitializedAsync();
     }
@@ -65,23 +58,13 @@
     private void OnItemSelected(object? sender, Film film)
     {
         // TODO: Move logic to FilmService
-        using var context = DbFactory.CreateDbContext();
-        var filmInDb = context.Film.FirstOrDefault(f => f == film);
+        var filmInDb = Context.Film.FirstOrDefault(f => f == film)
+                       ?? Context.Film.Add(film).Entity;
 
-        if (filmInDb is null)
+        if (!_currentUser.SavedFilms.Contains(filmInDb))
         {
-            context.User.First(u => u == _currentUser).SavedFilms.Add(film);
-            context.SaveChanges();
-
-            _films.Add(film);
-            StateHasChanged();
-        }
-        else if (!_films.Contains(filmInDb))
-        {
-            context.User.First(u => u == _currentUser).SavedFilms.Add(filmInDb);
-            context.SaveChanges();
-
-            _films.Add(film);
+            _currentUser.SavedFilms.Add(filmInDb);
+            Context.SaveChanges();
             StateHasChanged();
         }
     }
