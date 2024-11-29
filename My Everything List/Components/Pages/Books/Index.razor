@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
 @implements IDisposable
+@implements IAsyncDisposable
 
 @inject NavigationManager Navigation
 @inject MyEverythingListContext Context
@@ -72,7 +73,12 @@
 
     public void Dispose()
     {
-        Context.Dispose();
+        Context?.Dispose();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (Context != null) await Context.DisposeAsync();
     }
 
 }
