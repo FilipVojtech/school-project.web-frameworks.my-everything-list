@@ -1,4 +1,4 @@
-namespace My_Everything_List.Components.Pages;
+namespace My_Everything_List.Components.Pages.SettingsPage;
 
 public partial class Settings
 {
