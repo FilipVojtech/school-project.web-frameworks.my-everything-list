@@ -1,6 +1,13 @@
-<li @onclick="OnClickCallback">@Title</li>
+<Card Class="user-select-none cursor-pointer interactive" Color="@Color" @onclick="OnClickCallback">
+    <CardBody class="d-flex flex-row align-items-center p-2">
+        <Icon Name="Icon" Size="IconSize.x4" class="me-2"/>
+        <CardText class="mb-0">@Title</CardText>
+    </CardBody>
+</Card>
 
 @code {
-    [Parameter] public string? Title { get; set; }
-    [Parameter] public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+    [Parameter] public required string Title { get; set; }
+    [Parameter] public CardColor Color { get; set; } = CardColor.None;
+    [Parameter] public IconName Icon { get; set; } = IconName.None;
+    [Parameter] public required EventCallback<MouseEventArgs> OnClickCallback { get; set; }
 }
