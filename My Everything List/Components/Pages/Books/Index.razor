@@ -19,8 +19,10 @@
     <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
 </div>
 
-@foreach (var book in _books)
+@foreach (var userBook in _books)
 {
+    var book = userBook.Book;
+
     <BookItem
         Id="@book.Id.ToString()"
         Title="@book.Title"
@@ -30,10 +32,11 @@
         Isbn="@book.Isbn"
         OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
     />
+    <p>Rating: @userBook.Rating</p>
 }
 
 @code {
-    private List<Book> _books = [];
+    private List<UsersBooks> _books = [];
     private User _currentUser;
 
     protected override async Task OnInitializedAsync()
@@ -45,9 +48,11 @@
 
         await using (var context = await DbFactory.CreateDbContextAsync())
         {
-            _books = context.User
-                .Include(u => u.SavedBooks)
-                .First(u => u == _currentUser).SavedBooks.ToList();
+            _books = context.UsersBooks
+                .AsNoTracking()
+                .Where(ub => ub.User == _currentUser)
+                .Include(ub => ub.Book)
+                .ToList();
         }
 
         await base.OnInitializedAsync();
