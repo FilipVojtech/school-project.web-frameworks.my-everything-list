@@ -11,6 +11,9 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; init; }
 
+    [Column("tmdb_id")]
+    public int TmdbId { get; set; }
+
     [Column("title")] [StringLength(64)] public string? Title { get; set; }
 
     [Column("release_date")] public DateOnly ReleaseDate { get; set; }
@@ -30,8 +33,9 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
 
     public List<UsersFilms> UsersFilms { get; } = default!;
 
-    public Film(string? title, DateOnly releaseDate, string[] genres, string? description, string? image)
+    public Film(int tmdbId, string? title, DateOnly releaseDate, string[] genres, string? description, string? image)
     {
+        TmdbId = tmdbId;
         Title = title;
         ReleaseDate = releaseDate;
         Genres = [..genres];
@@ -41,10 +45,11 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
 
     public Film(Services.TmdbService.Film tmdbFilm)
     {
+        TmdbId = tmdbFilm.id;
         Title = tmdbFilm.title;
         ReleaseDate = DateOnly.Parse(tmdbFilm.release_date);
         Genres = tmdbFilm.genres?.Select(genre => genre.name).ToList() ?? [];
-        Description = tmdbFilm.tagline;
+        Description = tmdbFilm.overview;
         Image = tmdbFilm.poster_path;
     }
 
