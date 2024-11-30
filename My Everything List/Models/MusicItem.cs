@@ -19,6 +19,8 @@ public abstract class MusicItem : IEquatable<MusicItem>, IComparable<MusicItem>,
 
     [Column("name")] public string Name { get; set; }
 
+    [Column("mbid")] public Guid Mbid { get; set; }
+
     [Column("item_type")] public abstract MusicItemType ItemType { get; set; }
 
     [Column("image")]
