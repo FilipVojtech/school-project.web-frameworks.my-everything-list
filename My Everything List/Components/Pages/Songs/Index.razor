@@ -1,8 +1,6 @@
 @page "/songs"
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
-@implements IDisposable
-@implements IAsyncDisposable
 
 @inject NavigationManager Navigation
 @inject MyEverythingListContext Context
@@ -132,16 +130,6 @@
     {
         Context.UsersMusic.Remove(usersMusicItem);
         await Context.SaveChangesAsync();
-    }
-
-    public void Dispose()
-    {
-        Context?.Dispose();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (Context != null) await Context.DisposeAsync();
     }
 
 }
