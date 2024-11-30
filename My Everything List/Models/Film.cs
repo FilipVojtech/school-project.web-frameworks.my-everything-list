@@ -26,7 +26,9 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
     [StringLength(32)]
     public string? Image { get; set; }
 
-    public ICollection<User> SavedBy { get; set; } = default!;
+    public List<User> SavedBy { get; } = default!;
+
+    public List<UsersFilms> UsersFilms { get; } = default!;
 
     public Film(string? title, DateOnly releaseDate, string[] genres, string? description, string? image)
     {
@@ -57,7 +59,7 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate) && Genres.SequenceEqual(other.Genres);
+        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate);
     }
 
     public override bool Equals(object? obj)

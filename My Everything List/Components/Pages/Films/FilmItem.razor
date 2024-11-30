@@ -4,8 +4,8 @@
 
 @using My_Everything_List.Services.TmdbService
 
-<Card Id="@Id.ToString()" class="film-item user-select-none cursor-pointer interactive" @onclick="OnClick">
-    <CardBody class="d-flex">
+<Card Id="@Id.ToString()" class="film-item user-select-none">
+    <CardBody class="d-flex cursor-pointer interactive" @onclick="OnClick">
         <div class="me-3">
             @if (Image != null)
             {
@@ -26,11 +26,34 @@
             <CardText>@Description</CardText>
         </div>
     </CardBody>
+    @if (ShowControls)
+    {
+        <CardFooter Class="d-flex flex-row align-items-center justify-content-between">
+            <div>
+                <StarRating Value="Rating" OnChange="newRating => OnNewRating.InvokeAsync(newRating)"/>
+            </div>
+            <div>
+
+            </div>
+            <div>
+                <Icon
+                    Class="cursor-pointer"
+                    Name="IconName.Trash3Fill"
+                    Color="IconColor.Danger"
+                    Size="IconSize.x4"
+                    @onclick="() => OnDelete.InvokeAsync()"/>
+            </div>
+        </CardFooter>
+    }
 </Card>
 
 @code {
     [Parameter] public required int Id { get; set; }
     [Parameter] public required string Title { get; set; }
+    [Parameter] public required EventCallback<int> OnNewRating { get; set; }
+    [Parameter] public required EventCallback OnDelete { get; set; }
+    [Parameter] public required int Rating { get; set; }
+    [Parameter] public bool ShowControls { get; set; }
     [Parameter] public string? Description { get; set; }
     [Parameter] public string? Image { get; set; }
     [Parameter] public DateOnly ReleaseDate { get; set; }

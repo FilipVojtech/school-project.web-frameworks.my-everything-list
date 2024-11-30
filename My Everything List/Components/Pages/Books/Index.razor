@@ -3,7 +3,7 @@
 @attribute [Authorize(Roles = "Admin,User")]
 
 @inject NavigationManager Navigation
-@inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject MyEverythingListContext Context
 @inject IUserService User
 
 @using Microsoft.AspNetCore.Authorization
@@ -19,8 +19,10 @@
     <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
 </div>
 
-@foreach (var book in _books)
+@foreach (var userBook in _currentUser.UsersBooks)
 {
+    var book = userBook.Book;
+
     <BookItem
         Id="@book.Id.ToString()"
         Title="@book.Title"
@@ -28,27 +30,27 @@
         Description="@book.Description"
         Image="@book.Image"
         Isbn="@book.Isbn"
+        Rating="userBook.Rating"
+        ShowControls
+        OnNewRating="newRating => UpdateRating(userBook, newRating)"
+        OnDelete="() => DeleteItem(userBook)"
         OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
     />
 }
 
 @code {
-    private List<Book> _books = [];
-    private User _currentUser;
+    private User _currentUser = default!;
 
     protected override async Task OnInitializedAsync()
     {
         var user = await User.GetUser();
 
         if (user is null) Navigation.NavigateTo("/");
-        else _currentUser = user;
-
-        await using (var context = await DbFactory.CreateDbContextAsync())
-        {
-            _books = context.User
+        else
+            _currentUser = Context.User
+                .Include(u => u.UsersBooks)
                 .Include(u => u.SavedBooks)
-                .First(u => u == _currentUser).SavedBooks.ToList();
-        }
+                .First(u => u == user);
 
         await base.OnInitializedAsync();
     }
@@ -56,32 +58,30 @@
     private void OnItemSelected(object? sender, Book book)
     {
         // TODO: Move logic to BookService
-        using var context = DbFactory.CreateDbContext();
-        var bookInDb = context.Books.FirstOrDefault(b => b.Isbn == book.Isbn);
-
         // If book is not in DB
-        if (bookInDb is null)
-        {
-            // Implicitly, it cannot be saved by user
-            //Add it to users saved books and therefore add it to DB as well
-            context.User.First(u => u == _currentUser).SavedBooks.Add(book);
-            context.SaveChanges();
+        // Add it
+        var bookInDb = Context.Books.FirstOrDefault(b => b.Isbn == book.Isbn)
+                       ?? Context.Books.Add(book).Entity;
 
-            _books.Add(book);
-            StateHasChanged();
-        }
-        // Book is in DB
         // Check that it is not already saved by user
-        else if (!_books.Contains(bookInDb))
-        {
-            // If not, save it to users saved books
-            // Use the bookInDb var to not add duplicate
-            context.User.First(u => u == _currentUser).SavedBooks.Add(bookInDb);
-            context.SaveChanges();
+        if (_currentUser.SavedBooks.Contains(bookInDb)) return;
+        // If not, save it to users saved books
+        // Use the entity
+        _currentUser.SavedBooks.Add(bookInDb);
+        Context.SaveChanges();
+        StateHasChanged();
+    }
 
-            _books.Add(book);
-            StateHasChanged();
-        }
+    private async Task UpdateRating(UsersBooks usersBookItem, int newRating)
+    {
+        Context.Update(usersBookItem).Entity.Rating = newRating;
+        await Context.SaveChangesAsync();
+    }
+
+    private async Task DeleteItem(UsersBooks usersBookItem)
+    {
+        Context.UsersBooks.Remove(usersBookItem);
+        await Context.SaveChangesAsync();
     }
 
 }

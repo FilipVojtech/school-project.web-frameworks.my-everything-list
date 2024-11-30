@@ -11,8 +11,8 @@ using My_Everything_List.Data;
 namespace MyEverythingList.Migrations
 {
     [DbContext(typeof(MyEverythingListContext))]
-    [Migration("20241127221639_UsersManyToManyItems")]
-    partial class UsersManyToManyItems
+    [Migration("20241129205138_ItemRating")]
+    partial class ItemRating
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,7 @@ namespace MyEverythingList.Migrations
                         .HasColumnName("description");
 
                     b.Property<string>("Genres")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("genres");
 
@@ -134,55 +135,77 @@ namespace MyEverythingList.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Role")
+                        .HasMaxLength(5)
                         .HasColumnType("TEXT")
                         .HasColumnName("role");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("users_books", b =>
+            modelBuilder.Entity("My_Everything_List.Models.UsersBooks", b =>
                 {
-                    b.Property<int>("SavedBooksId")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("BookId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("book_id");
 
-                    b.Property<int>("SavedById")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("SavedBooksId", "SavedById");
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("rating");
 
-                    b.HasIndex("SavedById");
+                    b.HasKey("BookId", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("users_books");
                 });
 
-            modelBuilder.Entity("users_films", b =>
+            modelBuilder.Entity("My_Everything_List.Models.UsersFilms", b =>
                 {
-                    b.Property<int>("SavedById")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("FilmId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("film_id");
 
-                    b.Property<int>("SavedFilmsId")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("SavedById", "SavedFilmsId");
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("rating");
 
-                    b.HasIndex("SavedFilmsId");
+                    b.HasKey("FilmId", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("users_films");
                 });
 
-            modelBuilder.Entity("users_music", b =>
+            modelBuilder.Entity("My_Everything_List.Models.UsersMusic", b =>
                 {
-                    b.Property<int>("SavedById")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("MusicItemId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("music_id");
 
-                    b.Property<int>("SavedMusicId")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("SavedById", "SavedMusicId");
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("rating");
 
-                    b.HasIndex("SavedMusicId");
+                    b.HasKey("MusicItemId", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("users_music");
                 });
@@ -226,49 +249,77 @@ namespace MyEverythingList.Migrations
                     b.HasDiscriminator().HasValue(2);
                 });
 
-            modelBuilder.Entity("users_books", b =>
+            modelBuilder.Entity("My_Everything_List.Models.UsersBooks", b =>
                 {
-                    b.HasOne("My_Everything_List.Models.Book", null)
-                        .WithMany()
-                        .HasForeignKey("SavedBooksId")
+                    b.HasOne("My_Everything_List.Models.Book", "Book")
+                        .WithMany("UsersBooks")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("My_Everything_List.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("SavedById")
+                    b.HasOne("My_Everything_List.Models.User", "User")
+                        .WithMany("UsersBooks")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("users_films", b =>
+            modelBuilder.Entity("My_Everything_List.Models.UsersFilms", b =>
                 {
-                    b.HasOne("My_Everything_List.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("SavedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("My_Everything_List.Models.Film", null)
-                        .WithMany()
-                        .HasForeignKey("SavedFilmsId")
+                        .WithMany("UsersFilms")
+                        .HasForeignKey("FilmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("My_Everything_List.Models.User", null)
+                        .WithMany("UsersFilms")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("users_music", b =>
+            modelBuilder.Entity("My_Everything_List.Models.UsersMusic", b =>
                 {
-                    b.HasOne("My_Everything_List.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("SavedById")
+                    b.HasOne("My_Everything_List.Models.MusicItem", null)
+                        .WithMany("UsersMusic")
+                        .HasForeignKey("MusicItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("My_Everything_List.Models.MusicItem", null)
-                        .WithMany()
-                        .HasForeignKey("SavedMusicId")
+                    b.HasOne("My_Everything_List.Models.User", null)
+                        .WithMany("UsersMusic")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("My_Everything_List.Models.Book", b =>
+                {
+                    b.Navigation("UsersBooks");
+                });
+
+            modelBuilder.Entity("My_Everything_List.Models.Film", b =>
+                {
+                    b.Navigation("UsersFilms");
+                });
+
+            modelBuilder.Entity("My_Everything_List.Models.MusicItem", b =>
+                {
+                    b.Navigation("UsersMusic");
+                });
+
+            modelBuilder.Entity("My_Everything_List.Models.User", b =>
+                {
+                    b.Navigation("UsersBooks");
+
+                    b.Navigation("UsersFilms");
+
+                    b.Navigation("UsersMusic");
                 });
 #pragma warning restore 612, 618
         }

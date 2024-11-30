@@ -3,7 +3,7 @@
 @attribute [Authorize(Roles = "Admin,User")]
 
 @inject NavigationManager Navigation
-@inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject MyEverythingListContext Context
 @inject IUserService User
 
 @using Microsoft.AspNetCore.Authorization
@@ -15,60 +15,82 @@
 <PageTitle>Your Music</PageTitle>
 
 <div class="container-fluid d-flex justify-content-between mb-3">
-    <h3>Songs</h3>
+    <h3>Music</h3>
     <SearchMusicModal ButtonTitle="Add Music" OnItemSelected="(_, song) => AddMusicItem(song)"/>
 </div>
 
 @{
-    var artists = _musicItems.FindAll(item => item.ItemType == MusicItemType.Artist);
-    var albums = _musicItems.FindAll(item => item.ItemType == MusicItemType.Album);
-    var tracks = _musicItems.FindAll(item => item.ItemType == MusicItemType.Track);
+    var artists = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Artist);
+    var albums = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Album);
+    var tracks = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Track);
+}
 
-    if (tracks.Count > 0)
-    {
-        foreach (var track in tracks.Cast<Song>())
+@if (tracks.Count > 0)
+{
+    <div class="m-1">
+        <h3>Songs</h3>
+        @foreach (var userTrack in tracks)
         {
+            var track = (Song)userTrack.MusicItem;
             <SongItem
                 Id="@track.Id.ToString()"
                 Title="@track.Name"
                 Artist="@track.Artist"
                 Image="@track.Image"
+                Rating="userTrack.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userTrack, newRating)"
+                OnDelete="() => DeleteItem(userTrack)"
                 OnClick='() => Navigation.NavigateTo($"/songs/song/{track.Id}")'
             />
         }
-    }
+    </div>
+}
 
-    if (artists.Count > 0)
-    {
+@if (artists.Count > 0)
+{
+    <div class="m-1">
         <h3>Artists</h3>
-        @foreach (var artist in artists.Cast<Artist>())
+        @foreach (var userArtist in artists)
         {
+            var artist = (Artist)userArtist.MusicItem;
             <ArtistItem
                 Id="@artist.Id.ToString()"
                 Title="@artist.Name"
                 Image="@artist.Image"
+                Rating="userArtist.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userArtist, newRating)"
+                OnDelete="() => DeleteItem(userArtist)"
                 OnClick='()=>Navigation.NavigateTo($"/songs/artist/{artist.Id}")'
             />
         }
-    }
+    </div>
+}
 
-    if (albums.Count > 0)
-    {
+@if (albums.Count > 0)
+{
+    <div class="m-1">
         <h3>Albums</h3>
-        @foreach (var album in albums.Cast<Album>())
+        @foreach (var userAlbum in albums)
         {
+            var album = (Album)userAlbum.MusicItem;
             <AlbumItem
                 Id="@album.Id.ToString()"
                 Title="@album.Name"
                 Image="@album.Image"
+                Artist="@album.Artist"
+                Rating="userAlbum.Rating"
+                ShowControls
+                OnNewRating="@(newRating => UpdateRating(userAlbum, newRating))"
+                OnDelete="() => DeleteItem(userAlbum)"
                 OnClick='() => Navigation.NavigateTo($"/songs/album/{album.Id}")'
             />
         }
-    }
+    </div>
 }
 
 @code {
-    List<MusicItem> _musicItems = [];
     private User _currentUser;
 
     protected override async Task OnInitializedAsync()
@@ -76,14 +98,11 @@
         var user = await User.GetUser();
 
         if (user is null) Navigation.NavigateTo("/");
-        else _currentUser = user;
-
-        await using (var context = await DbFactory.CreateDbContextAsync())
-        {
-            _musicItems = context.User
+        else
+            _currentUser = Context.User
+                .Include(u => u.UsersMusic)
                 .Include(u => u.SavedMusic)
-                .First(u => u == _currentUser).SavedMusic.ToList();
-        }
+                .First(u => u == user);
 
         await base.OnInitializedAsync();
     }
@@ -91,28 +110,26 @@
     private void AddMusicItem(MusicItem item)
     {
         // TODO: Move logic to MusicService
-        using var context = DbFactory.CreateDbContext();
-        var musicInDb = context.MusicItems.FirstOrDefault(m => m == item);
+        var musicInDb = Context.MusicItems.FirstOrDefault(m => m == item)
+                        ?? Context.MusicItems.Add(item).Entity;
 
-        if (musicInDb is null)
-        {
-            context.User.First(u => u == _currentUser).SavedMusic.Add(item);
-            context.SaveChanges();
+        if (_currentUser.SavedMusic.Contains(musicInDb)) return;
 
-            _musicItems.Add(item);
-            StateHasChanged();
-        }
-        else if (_musicItems.Contains(musicInDb))
-        {
-            context.User.First(u => u == _currentUser).SavedMusic.Add(musicInDb);
-            context.SaveChanges();
-
-            _musicItems.Add(item);
-            StateHasChanged();
-        }
-
-        _musicItems.Add(item);
+        _currentUser.SavedMusic.Add(musicInDb);
+        Context.SaveChanges();
         StateHasChanged();
+    }
+
+    private async Task UpdateRating(UsersMusic usersMusicItem, int newRating)
+    {
+        Context.Update(usersMusicItem).Entity.Rating = newRating;
+        await Context.SaveChangesAsync();
+    }
+
+    private async Task DeleteItem(UsersMusic usersMusicItem)
+    {
+        Context.UsersMusic.Remove(usersMusicItem);
+        await Context.SaveChangesAsync();
     }
 
 }
