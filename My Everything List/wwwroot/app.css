@@ -45,3 +45,10 @@ h1:focus {
 .interactive:hover {
     background-color: #e4e4e4;
 }
+
+.item-description {
+    display: inline-block;
+    max-height: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
