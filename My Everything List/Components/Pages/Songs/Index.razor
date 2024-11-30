@@ -39,6 +39,10 @@
                 Title="@track.Name"
                 Artist="@track.Artist"
                 Image="@track.Image"
+                Rating="userTrack.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userTrack, newRating)"
+                OnDelete="() => DeleteItem(userTrack)"
                 OnClick='() => Navigation.NavigateTo($"/songs/song/{track.Id}")'
             />
         }
@@ -56,6 +60,10 @@
                 Id="@artist.Id.ToString()"
                 Title="@artist.Name"
                 Image="@artist.Image"
+                Rating="userArtist.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userArtist, newRating)"
+                OnDelete="() => DeleteItem(userArtist)"
                 OnClick='()=>Navigation.NavigateTo($"/songs/artist/{artist.Id}")'
             />
         }
@@ -74,6 +82,10 @@
                 Title="@album.Name"
                 Image="@album.Image"
                 Artist="@album.Artist"
+                Rating="userAlbum.Rating"
+                ShowControls
+                OnNewRating="@(newRating => UpdateRating(userAlbum, newRating))"
+                OnDelete="() => DeleteItem(userAlbum)"
                 OnClick='() => Navigation.NavigateTo($"/songs/album/{album.Id}")'
             />
         }
@@ -108,6 +120,18 @@
         _currentUser.SavedMusic.Add(musicInDb);
         Context.SaveChanges();
         StateHasChanged();
+    }
+
+    private async Task UpdateRating(UsersMusic usersMusicItem, int newRating)
+    {
+        Context.Update(usersMusicItem).Entity.Rating = newRating;
+        await Context.SaveChangesAsync();
+    }
+
+    private async Task DeleteItem(UsersMusic usersMusicItem)
+    {
+        Context.UsersMusic.Remove(usersMusicItem);
+        await Context.SaveChangesAsync();
     }
 
     public void Dispose()
