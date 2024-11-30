@@ -1,0 +1,90 @@
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
+@using My_Everything_List.Services.TmdbService
+@using My_Everything_List.Services.UserService
+@using Film = My_Everything_List.Services.TmdbService.Film
+
+@page "/films/film/{FilmId:int}"
+
+@inject MyEverythingListContext Context
+@inject IUserService UserService
+@inject NavigationManager Navigation
+@inject ITmdbService Tmdb
+
+<PageTitle>@(_film?.title ?? "Film page")</PageTitle>
+
+@if (_film is not null)
+{
+    var imgUrl = Tmdb.ConstructImageUrl(_film.poster_path);
+    var backdropUrl = Tmdb.ConstructImageUrl(_film.backdrop_path);
+    var genres = string.Empty;
+
+    foreach (var genre in _film.genres)
+    {
+        genres += $"{genre.name}, ";
+    }
+
+    <div
+        class="film-details d-flex flex-row p-4 rounded-4 align-items-center"
+        style="background-image: url(@backdropUrl); background-position: center; background-size: cover;"
+    >
+        <img class="poster me-4 rounded-2" src="@imgUrl" alt="">
+
+        <div class="d-flex flex-column">
+            <div class="film-text text-white px-2 py-3 rounded-3 mb-4">
+                <h3>@(_film.title) (@(DateOnly.Parse(_film.release_date).Year))</h3>
+                <div class="film-info mb-3 d-flex gap-2">
+                    <div>@(DateOnly.Parse(_film.release_date))</div>
+                    &bull;
+                    <div>@genres[..^2]</div>
+                </div>
+
+                <p>@_film.tagline</p>
+                <h4>Overview</h4>
+                <p>@_film.overview</p>
+                @if (_film.credits is not null)
+                {
+                    var directors = _film.credits.crew.Where(c => c.job.Equals("Director", StringComparison.OrdinalIgnoreCase)).Select(c => c.original_name).ToList();
+                    <h4>@(directors.Count > 1 ? "Directors" : "Director")</h4>
+                    <div class="container-fluid d-flex gap-md-5 gap-2">
+                        @foreach (var director in directors)
+                        {
+                            <p>@director</p>
+                        }
+                    </div>
+                }
+            </div>
+            <Button Type="ButtonType.Button" Color="ButtonColor.Info" class="align-self-end px-3">View on TMDB
+                <Icon Class="ms-2" Name="IconName.BoxArrowUpRight"/>
+            </Button>
+        </div>
+
+    </div>
+    <p class="text-end mt-2">Data graciously provided by <a href="https://tmdb.org" target="_blank">The Movie
+            Database</a></p>
+}
+
+@code {
+    [Parameter] public int FilmId { get; set; }
+    private User _currentUser;
+    private Film? _film;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserService.GetUser();
+
+        if (user is null) Navigation.NavigateTo("/films");
+        else
+            _currentUser = Context.User
+                .Include(u => u.SavedFilms)
+                .First(u => u == user);
+
+        var film = _currentUser.UsersFilms.First(uf => uf.FilmId == FilmId);
+
+        _film = await Tmdb.GetFilm(film.Film.TmdbId);
+
+        await base.OnInitializedAsync();
+    }
+
+}
