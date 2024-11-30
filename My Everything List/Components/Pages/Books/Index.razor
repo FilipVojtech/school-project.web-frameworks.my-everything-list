@@ -32,9 +32,12 @@
         Description="@book.Description"
         Image="@book.Image"
         Isbn="@book.Isbn"
+        Rating="userBook.Rating"
+        ShowControls
+        OnNewRating="newRating => UpdateRating(userBook, newRating)"
+        OnDelete="() => DeleteItem(userBook)"
         OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
     />
-    <p>Rating: @userBook.Rating</p>
 }
 
 @code {
@@ -69,6 +72,18 @@
         _currentUser.SavedBooks.Add(bookInDb);
         Context.SaveChanges();
         StateHasChanged();
+    }
+
+    private async Task UpdateRating(UsersBooks usersBookItem, int newRating)
+    {
+        Context.Update(usersBookItem).Entity.Rating = newRating;
+        await Context.SaveChangesAsync();
+    }
+
+    private async Task DeleteItem(UsersBooks usersBookItem)
+    {
+        Context.UsersBooks.Remove(usersBookItem);
+        await Context.SaveChangesAsync();
     }
 
     public void Dispose()
