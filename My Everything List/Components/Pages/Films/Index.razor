@@ -15,28 +15,30 @@
 <PageTitle>Your Films</PageTitle>
 
 <div class="container-fluid d-flex justify-content-between mb-3">
-    <h3>Films</h3>
+    <h3 class="m-0">Films</h3>
     <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
 </div>
 
-@foreach (var userFilm in _currentUser.UsersFilms)
-{
-    var film = userFilm.Film;
+<div class="item-grid">
+    @foreach (var userFilm in _currentUser.UsersFilms)
+    {
+        var film = userFilm.Film;
 
-    <FilmItem
-        Id="film.Id"
-        Title="@film.Title"
-        Description="@film.Description"
-        Genres="@film.Genres"
-        Image="@film.Image"
-        ReleaseDate="@film.ReleaseDate"
-        Rating="userFilm.Rating"
-        ShowControls
-        OnNewRating="newRating => UpdateRating(userFilm, newRating)"
-        OnDelete="() => DeleteItem(userFilm)"
-        OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
-    />
-}
+        <FilmItem
+            Id="film.Id"
+            Title="@film.Title"
+            Description="@film.Description"
+            Genres="@film.Genres"
+            Image="@film.Image"
+            ReleaseDate="@film.ReleaseDate"
+            Rating="userFilm.Rating"
+            ShowControls
+            OnNewRating="newRating => UpdateRating(userFilm, newRating)"
+            OnDelete="() => DeleteItem(userFilm)"
+            OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
+        />
+    }
+</div>
 
 @code {
     private User _currentUser;

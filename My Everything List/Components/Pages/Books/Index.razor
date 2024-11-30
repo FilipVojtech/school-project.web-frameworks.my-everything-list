@@ -15,28 +15,30 @@
 <PageTitle>Your Books</PageTitle>
 
 <div class="container-fluid d-flex justify-content-between mb-3">
-    <h3>Books</h3>
+    <h3 class="m-0">Books</h3>
     <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
 </div>
 
-@foreach (var userBook in _currentUser.UsersBooks)
-{
-    var book = userBook.Book;
+<div class="item-grid">
+    @foreach (var userBook in _currentUser.UsersBooks)
+    {
+        var book = userBook.Book;
 
-    <BookItem
-        Id="@book.Id.ToString()"
-        Title="@book.Title"
-        Authors="@book.Authors"
-        Description="@book.Description"
-        Image="@book.Image"
-        Isbn="@book.Isbn"
-        Rating="userBook.Rating"
-        ShowControls
-        OnNewRating="newRating => UpdateRating(userBook, newRating)"
-        OnDelete="() => DeleteItem(userBook)"
-        OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
-    />
-}
+        <BookItem
+            Id="@book.Id.ToString()"
+            Title="@book.Title"
+            Authors="@book.Authors"
+            Description="@book.Description"
+            Image="@book.Image"
+            Isbn="@book.Isbn"
+            Rating="userBook.Rating"
+            ShowControls
+            OnNewRating="newRating => UpdateRating(userBook, newRating)"
+            OnDelete="() => DeleteItem(userBook)"
+            OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
+        />
+    }
+</div>
 
 @code {
     private User _currentUser = default!;

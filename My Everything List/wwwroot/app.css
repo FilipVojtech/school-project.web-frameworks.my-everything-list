@@ -46,6 +46,12 @@ h1:focus {
     background-color: #e4e4e4;
 }
 
+.item-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0.5rem;
+}
+
 .item-description {
     display: inline-block;
     max-height: 150px;

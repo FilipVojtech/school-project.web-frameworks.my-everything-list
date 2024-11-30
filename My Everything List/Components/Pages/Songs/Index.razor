@@ -15,56 +15,37 @@
 <PageTitle>Your Music</PageTitle>
 
 <div class="container-fluid d-flex justify-content-between mb-3">
-    <h3>Music</h3>
+    <h3 class="m-0">Music</h3>
     <SearchMusicModal ButtonTitle="Add Music" OnItemSelected="(_, song) => AddMusicItem(song)"/>
 </div>
 
 @{
-    var artists = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Artist);
-    var albums = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Album);
     var tracks = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Track);
+    var albums = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Album);
+    var artists = _currentUser.UsersMusic.FindAll(item => item.MusicItem.ItemType == MusicItemType.Artist);
 }
 
 @if (tracks.Count > 0)
 {
     <div class="m-1">
         <h3>Songs</h3>
-        @foreach (var userTrack in tracks)
-        {
-            var track = (Song)userTrack.MusicItem;
-            <SongItem
-                Id="@track.Id.ToString()"
-                Title="@track.Name"
-                Artist="@track.Artist"
-                Image="@track.Image"
-                Rating="userTrack.Rating"
-                ShowControls
-                OnNewRating="newRating => UpdateRating(userTrack, newRating)"
-                OnDelete="() => DeleteItem(userTrack)"
-                OnClick='() => Navigation.NavigateTo($"/songs/song/{track.Id}")'
-            />
-        }
-    </div>
-}
-
-@if (artists.Count > 0)
-{
-    <div class="m-1">
-        <h3>Artists</h3>
-        @foreach (var userArtist in artists)
-        {
-            var artist = (Artist)userArtist.MusicItem;
-            <ArtistItem
-                Id="@artist.Id.ToString()"
-                Title="@artist.Name"
-                Image="@artist.Image"
-                Rating="userArtist.Rating"
-                ShowControls
-                OnNewRating="newRating => UpdateRating(userArtist, newRating)"
-                OnDelete="() => DeleteItem(userArtist)"
-                OnClick='()=>Navigation.NavigateTo($"/songs/artist/{artist.Id}")'
-            />
-        }
+        <div class="item-grid">
+            @foreach (var userTrack in tracks)
+            {
+                var track = (Song)userTrack.MusicItem;
+                <SongItem
+                    Id="@track.Id.ToString()"
+                    Title="@track.Name"
+                    Artist="@track.Artist"
+                    Image="@track.Image"
+                    Rating="userTrack.Rating"
+                    ShowControls
+                    OnNewRating="newRating => UpdateRating(userTrack, newRating)"
+                    OnDelete="() => DeleteItem(userTrack)"
+                    OnClick='() => Navigation.NavigateTo($"/songs/song/{track.Id}")'
+                />
+            }
+        </div>
     </div>
 }
 
@@ -72,21 +53,46 @@
 {
     <div class="m-1">
         <h3>Albums</h3>
-        @foreach (var userAlbum in albums)
-        {
-            var album = (Album)userAlbum.MusicItem;
-            <AlbumItem
-                Id="@album.Id.ToString()"
-                Title="@album.Name"
-                Image="@album.Image"
-                Artist="@album.Artist"
-                Rating="userAlbum.Rating"
-                ShowControls
-                OnNewRating="@(newRating => UpdateRating(userAlbum, newRating))"
-                OnDelete="() => DeleteItem(userAlbum)"
-                OnClick='() => Navigation.NavigateTo($"/songs/album/{album.Id}")'
-            />
-        }
+        <div class="item-grid">
+            @foreach (var userAlbum in albums)
+            {
+                var album = (Album)userAlbum.MusicItem;
+                <AlbumItem
+                    Id="@album.Id.ToString()"
+                    Title="@album.Name"
+                    Image="@album.Image"
+                    Artist="@album.Artist"
+                    Rating="userAlbum.Rating"
+                    ShowControls
+                    OnNewRating="@(newRating => UpdateRating(userAlbum, newRating))"
+                    OnDelete="() => DeleteItem(userAlbum)"
+                    OnClick='() => Navigation.NavigateTo($"/songs/album/{album.Id}")'
+                />
+            }
+        </div>
+    </div>
+}
+
+@if (artists.Count > 0)
+{
+    <div class="m-1">
+        <h3>Artists</h3>
+        <div class="item-grid">
+            @foreach (var userArtist in artists)
+            {
+                var artist = (Artist)userArtist.MusicItem;
+                <ArtistItem
+                    Id="@artist.Id.ToString()"
+                    Title="@artist.Name"
+                    Image="@artist.Image"
+                    Rating="userArtist.Rating"
+                    ShowControls
+                    OnNewRating="newRating => UpdateRating(userArtist, newRating)"
+                    OnDelete="() => DeleteItem(userArtist)"
+                    OnClick='()=>Navigation.NavigateTo($"/songs/artist/{artist.Id}")'
+                />
+            }
+        </div>
     </div>
 }
 
