@@ -32,10 +32,12 @@
         Genres="@film.Genres"
         Image="@film.Image"
         ReleaseDate="@film.ReleaseDate"
+        Rating="userFilm.Rating"
+        ShowControls
+        OnNewRating="newRating => UpdateRating(userFilm, newRating)"
+        OnDelete="() => DeleteItem(userFilm)"
         OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
     />
-
-    <p>Rating: @userFilm.Rating</p>
 }
 
 @code {
@@ -65,6 +67,18 @@
         _currentUser.SavedFilms.Add(filmInDb);
         Context.SaveChanges();
         StateHasChanged();
+    }
+
+    private async Task UpdateRating(UsersFilms usersFilmItem, int newRating)
+    {
+        Context.Update(usersFilmItem).Entity.Rating = newRating;
+        await Context.SaveChangesAsync();
+    }
+
+    private async Task DeleteItem(UsersFilms usersFilmItem)
+    {
+        Context.UsersFilms.Remove(usersFilmItem);
+        await Context.SaveChangesAsync();
     }
 
     public void Dispose()
