@@ -24,6 +24,8 @@ public class Book : IEquatable<Book>, IComparable<Book>
 
     [Column("isbn")] public string? Isbn { get; set; }
 
+    [Column("google_books_id")] public string GoogleBooksId { get; set; }
+
     public List<User> SavedBy { get; } = [];
 
     public List<UsersBooks> UsersBooks { get; } = [];
@@ -34,8 +36,9 @@ public class Book : IEquatable<Book>, IComparable<Book>
         Authors = [];
     }
 
-    public Book(string title, string? description, string[] authors, string? image, string? isbn)
+    public Book(string googleBooksId, string title, string? description, string[] authors, string? image, string? isbn)
     {
+        GoogleBooksId = googleBooksId;
         Title = title;
         Description = description;
         Authors = authors;
@@ -46,6 +49,7 @@ public class Book : IEquatable<Book>, IComparable<Book>
     public Book(Volume volume)
     {
         var volumeInfo = volume.volumeInfo;
+        GoogleBooksId = volume.id;
         Title = volumeInfo.title;
         Description = volumeInfo.description;
         Authors = volumeInfo.authors;
