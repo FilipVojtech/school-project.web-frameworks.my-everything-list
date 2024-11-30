@@ -58,3 +58,9 @@ h1:focus {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+@media (max-width: 991.98px) {
+    .item-grid {
+        grid-template-columns: 1fr;
+    }
+}
