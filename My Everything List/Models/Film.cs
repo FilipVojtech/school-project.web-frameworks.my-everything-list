@@ -59,7 +59,7 @@ public class Film : IEquatable<Film>, IComparable<Film>, IComparable
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate) && Genres.SequenceEqual(other.Genres);
+        return Title == other.Title && ReleaseDate.Equals(other.ReleaseDate);
     }
 
     public override bool Equals(object? obj)
