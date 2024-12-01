@@ -15,8 +15,7 @@ namespace MyEverythingList.Migrations
                 name: "mbid",
                 table: "music_items",
                 type: "TEXT",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                nullable: true);
         }
 
         /// <inheritdoc />

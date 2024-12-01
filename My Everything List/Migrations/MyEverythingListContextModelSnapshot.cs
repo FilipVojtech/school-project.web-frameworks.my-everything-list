@@ -111,7 +111,7 @@ namespace MyEverythingList.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("item_type");
 
-                    b.Property<Guid>("Mbid")
+                    b.Property<Guid?>("Mbid")
                         .HasColumnType("TEXT")
                         .HasColumnName("mbid");
 

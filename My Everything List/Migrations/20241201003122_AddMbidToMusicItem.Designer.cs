@@ -11,7 +11,7 @@ using My_Everything_List.Data;
 namespace MyEverythingList.Migrations
 {
     [DbContext(typeof(MyEverythingListContext))]
-    [Migration("20241130224423_AddMbidToMusicItem")]
+    [Migration("20241201003122_AddMbidToMusicItem")]
     partial class AddMbidToMusicItem
     {
         /// <inheritdoc />
@@ -114,7 +114,7 @@ namespace MyEverythingList.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("item_type");
 
-                    b.Property<Guid>("Mbid")
+                    b.Property<Guid?>("Mbid")
                         .HasColumnType("TEXT")
                         .HasColumnName("mbid");
 
