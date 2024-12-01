@@ -8,29 +8,29 @@ namespace My_Everything_List.Tests.Models;
 public class ArtistTest
 {
     [Test]
-    public void Equals()
+    public void Equals_Same()
     {
         Artist artist1 = new Artist("Artist1", "/img1.jpg");
-        object artist2 = new Artist("Artist1", "/img2.jpg");
+        Artist artist2 = new Artist("Artist1", "/img1.jpg");
 
-        Assert.That(artist1 == (Artist)artist2, Is.True);
+        Assert.That(artist1.Equals(artist2), Is.True);
     }
 
     [Test]
-    public void NotEquals()
+    public void Equals_DifferentName()
     {
         Artist artist1 = new Artist("Artist1", "/img1.jpg");
-        object artist2 = new Artist("Artist2", "/img1.jpg");
+        Artist artist2 = new Artist("Artist2", "/img1.jpg");
 
-        Assert.That(artist1 == (Artist)artist2, Is.False);
+        Assert.That(artist1.Equals(artist2), Is.False);
     }
 
     [Test]
-    public void NotEquals_Null()
+    public void Equals_DifferentImage()
     {
         Artist artist1 = new Artist("Artist1", "/img1.jpg");
-        object artist2 = null;
+        Artist artist2 = new Artist("Artist1", "/img2.jpg");
 
-        Assert.That(artist1 == (Artist)artist2, Is.False);
+        Assert.That(artist1.Equals(artist2), Is.True);
     }
 }
