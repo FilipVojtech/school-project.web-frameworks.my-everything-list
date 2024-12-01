@@ -56,7 +56,6 @@
         else
             _currentUser = Context.User
                 .Include(u => u.SavedMusic)
-                .Include(u => u.UsersMusic)
                 .First(u => u == user);
 
         var song = (Song)_currentUser.SavedMusic.First(sm => sm.Id == SongId);
