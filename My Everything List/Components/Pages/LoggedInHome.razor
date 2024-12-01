@@ -1,0 +1,54 @@
+@using Microsoft.AspNetCore.Authorization
+@using My_Everything_List.Services.LastfmService
+@using My_Everything_List.Services.TmdbService
+
+@inject ITmdbService Tmdb
+@inject ILastfmService Lastfm
+
+@attribute [Authorize]
+
+<h3>Top Artists</h3>
+<div class="item-grid">
+    @foreach (var artist in _topArtists)
+    {
+    }
+</div>
+
+<h3>Top Songs</h3>
+<div class="item-grid">
+    @foreach (var track in _topTracks)
+    {
+    }
+</div>
+
+<h3>Popular Films</h3>
+<div class="item-grid">
+    @foreach (var film in _popularFilms)
+    {
+    }
+</div>
+
+<h3>Upcoming Films</h3>
+<div class="item-grid">
+    @foreach (var film in _upcomingFilms)
+    {
+    }
+</div>
+
+@code {
+    private List<Film> _upcomingFilms { get; set; }
+    private List<Film> _popularFilms { get; set; }
+    private List<LfmArtist> _topArtists { get; set; }
+    private List<LfmTrack> _topTracks { get; set; }
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await base.OnInitializedAsync();
+    //
+    //     _upcomingFilms = (List<Film>)await Tmdb.GetUpcoming();
+    //     _popularFilms = (List<Film>)await Tmdb.GetPopular();
+    //     _topArtists = (List<LfmArtist>)await Lastfm.GetTopArtists();
+    //     _topTracks = (List<LfmTrack>)await Lastfm.GetTopTracks();
+    // }
+
+}
