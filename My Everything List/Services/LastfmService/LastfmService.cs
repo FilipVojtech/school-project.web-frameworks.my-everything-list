@@ -200,7 +200,7 @@ public class LastfmService : ILastfmService
         else
         {
             parameters.Add(new("artist", song.Artist));
-            parameters.Add(new("album", song.Name));
+            parameters.Add(new("track", song.Name));
         }
 
         var result = await _client.ExecuteAsync(BuildRequest(LastfmMethods.GetTrack, parameters));
