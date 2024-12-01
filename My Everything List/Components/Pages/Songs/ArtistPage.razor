@@ -51,6 +51,7 @@
         if (user is null) Navigation.NavigateTo("/music");
         else
             _currentUser = Context.User
+                .Include(u => u.SavedMusic) // Must be included for the next second statement to work
                 .Include(u => u.UsersMusic)
                 .First(u => u == user);
 
