@@ -8,5 +8,5 @@ public interface ILastfmService
     Task<LfmArtist?> GetArtist(Artist artist);
     Task<AlbumsSearchResults?> SearchAlbums(string album);
     Task<LfmAlbum?> GetAlbum(Album album);
-    Task<SongsSearchResults?> SearchSongs(string song);
+    Task<TracksSearchResults?> SearchSongs(string song);
 }

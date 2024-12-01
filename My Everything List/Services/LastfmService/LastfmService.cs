@@ -165,7 +165,7 @@ public class LastfmService : ILastfmService
         }
     }
 
-    public async Task<SongsSearchResults?> SearchSongs(string song)
+    public async Task<TracksSearchResults?> SearchSongs(string song)
     {
         var parameters = new List<KeyValuePair<string, string>>
         {
@@ -183,11 +183,11 @@ public class LastfmService : ILastfmService
 
         if (string.IsNullOrWhiteSpace(content)) return null;
 
-        var serializer = new XmlSerializer(typeof(SongsSearchResults));
+        var serializer = new XmlSerializer(typeof(TracksSearchResults));
 
         using (StringReader sr = new(content))
         {
-            var deserialized = (SongsSearchResults?)serializer.Deserialize(sr);
+            var deserialized = (TracksSearchResults?)serializer.Deserialize(sr);
             return deserialized;
         }
     }
