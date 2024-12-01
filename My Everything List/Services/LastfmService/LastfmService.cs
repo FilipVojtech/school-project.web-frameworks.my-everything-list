@@ -111,6 +111,11 @@ public class LastfmService : ILastfmService
         }
     }
 
+    public Task<object> GetTopArtists()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<AlbumsSearchResults?> SearchAlbums(string album)
     {
         var parameters = new List<KeyValuePair<string, string>>
@@ -217,5 +222,10 @@ public class LastfmService : ILastfmService
             var deserialized = (LfmForTrack?)serializer.Deserialize(sr);
             return deserialized?.track;
         }
+    }
+
+    public Task<object> GetTopTracks()
+    {
+        throw new NotImplementedException();
     }
 }
