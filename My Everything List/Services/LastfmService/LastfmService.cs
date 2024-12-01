@@ -1,6 +1,7 @@
 using System.Net;
 using System.Xml;
 using System.Xml.Serialization;
+using My_Everything_List.Models;
 using RestSharp;
 
 namespace My_Everything_List.Services.LastfmService;
@@ -84,6 +85,29 @@ public class LastfmService : ILastfmService
         {
             var deserialized = (ArtistsSearchResults?)serializer.Deserialize(sr);
             return deserialized;
+        }
+    }
+
+    public async Task<lfmArtist?> GetArtist(Artist artist)
+    {
+        List<KeyValuePair<string, string>> parameters = [];
+
+        if (artist.Mbid is not null) parameters.Add(new("mbid", artist.Mbid.ToString()));
+        else parameters.Add(new("artist", artist.Name));
+
+        var result = await _client.ExecuteAsync(BuildRequest(LastfmMethods.GetArtist, parameters));
+
+        if (result.StatusCode != HttpStatusCode.OK || result.Content == null)
+        {
+            return null;
+        }
+
+        var serializer = new XmlSerializer(typeof(lfm));
+
+        using (StringReader sr = new(result.Content))
+        {
+            var deserialized = (lfm?)serializer.Deserialize(sr);
+            return deserialized?.artist;
         }
     }
 
