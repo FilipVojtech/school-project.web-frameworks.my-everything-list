@@ -10,15 +10,15 @@ namespace My_Everything_List.Services.LastfmService;
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
 [XmlRoot(Namespace = "", IsNullable = false)]
-public class lfm
+public class LfmForArtist
 {
 
-    private lfmArtist artistField;
+    private LfmArtist artistField;
 
     private string statusField;
 
     /// <remarks/>
-    public lfmArtist artist
+    public LfmArtist artist
     {
         get => artistField;
         set => artistField = value;
@@ -37,7 +37,7 @@ public class lfm
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-public class lfmArtist
+public class LfmArtist
 {
 
     private string nameField;
