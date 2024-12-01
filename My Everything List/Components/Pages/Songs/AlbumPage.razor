@@ -23,10 +23,10 @@
         <div class="d-flex flex-column">
             <div class="music-text px-2 py-3 rounded-3 mb-4">
                 <h3>@_album.name</h3>
-                <div class="book-info mb-3 d-flex gap-2">
+                <div class="music-info mb-3 d-flex gap-2">
+                    <div>@_album.artist</div>
+                    &bull;
                     <div>@(DateTime.Parse(_album.wiki.published).ToShortDateString())</div>
-                    @* &bull; *@
-                    @* <div>@_artist.industryIdentifiers.First().identifier</div> *@
                 </div>
 
                 <h4>About</h4>
