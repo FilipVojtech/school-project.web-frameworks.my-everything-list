@@ -138,6 +138,33 @@ public class LastfmService : ILastfmService
         }
     }
 
+    public async Task<LfmAlbum?> GetAlbum(Album album)
+    {
+        List<KeyValuePair<string, string>> parameters = [];
+
+        if (album.Mbid is not null) parameters.Add(new("mbid", album.Mbid.ToString()));
+        else
+        {
+            parameters.Add(new("artist", album.Artist));
+            parameters.Add(new("album", album.Name));
+        }
+
+        var result = await _client.ExecuteAsync(BuildRequest(LastfmMethods.GetAlbum, parameters));
+
+        if (result.StatusCode != HttpStatusCode.OK || result.Content == null)
+        {
+            return null;
+        }
+
+        var serializer = new XmlSerializer(typeof(LfmForAlbum));
+
+        using (StringReader sr = new(result.Content))
+        {
+            var deserialized = (LfmForAlbum?)serializer.Deserialize(sr);
+            return deserialized?.album;
+        }
+    }
+
     public async Task<SongsSearchResults?> SearchSongs(string song)
     {
         var parameters = new List<KeyValuePair<string, string>>
