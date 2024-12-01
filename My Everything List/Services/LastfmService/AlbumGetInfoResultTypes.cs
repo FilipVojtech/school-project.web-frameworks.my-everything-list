@@ -7,7 +7,7 @@ namespace My_Everything_List.Services.LastfmService;
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-[XmlRoot(Namespace = "", IsNullable = false)]
+[XmlRoot("lfm", Namespace = "", IsNullable = false)]
 public class LfmForAlbum
 {
 
@@ -37,7 +37,6 @@ public class LfmForAlbum
 [XmlType(AnonymousType = true)]
 public class LfmAlbum
 {
-
     private string nameField;
 
     private string artistField;
@@ -138,7 +137,6 @@ public class LfmAlbum
 [XmlType(AnonymousType = true)]
 public class lfmAlbumImage
 {
-
     private string sizeField;
 
     private string valueField;
@@ -166,7 +164,6 @@ public class lfmAlbumImage
 [XmlType(AnonymousType = true)]
 public class lfmAlbumTrack
 {
-
     private string nameField;
 
     private string urlField;
@@ -229,7 +226,6 @@ public class lfmAlbumTrack
 [XmlType(AnonymousType = true)]
 public class lfmAlbumTrackStreamable
 {
-
     private byte fulltrackField;
 
     private byte valueField;
@@ -257,7 +253,6 @@ public class lfmAlbumTrackStreamable
 [XmlType(AnonymousType = true)]
 public class lfmAlbumTrackArtist
 {
-
     private string nameField;
 
     private string mbidField;
@@ -292,7 +287,6 @@ public class lfmAlbumTrackArtist
 [XmlType(AnonymousType = true)]
 public class lfmAlbumTag
 {
-
     private string nameField;
 
     private string urlField;
@@ -318,7 +312,6 @@ public class lfmAlbumTag
 [XmlType(AnonymousType = true)]
 public class lfmAlbumWiki
 {
-
     private string publishedField;
 
     private string summaryField;
@@ -346,6 +339,3 @@ public class lfmAlbumWiki
         set => contentField = value;
     }
 }
-
-
-

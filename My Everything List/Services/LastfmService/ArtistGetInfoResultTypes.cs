@@ -9,7 +9,7 @@ namespace My_Everything_List.Services.LastfmService;
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-[XmlRoot(Namespace = "", IsNullable = false)]
+[XmlRoot("lfm", Namespace = "", IsNullable = false)]
 public class LfmForArtist
 {
 
