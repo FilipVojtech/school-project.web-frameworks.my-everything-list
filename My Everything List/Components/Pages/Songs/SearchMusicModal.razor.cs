@@ -19,7 +19,7 @@ public partial class SearchMusicModal
     private bool _searching = false;
     private ArtistsSearchResults? _artists = null;
     private AlbumsSearchResults? _albums = null;
-    private SongsSearchResults? _songs = null;
+    private TracksSearchResults? _songs = null;
     private Task _searchTimeout = Task.CompletedTask;
     private CancellationTokenSource _tokenSource = new();
 

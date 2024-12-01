@@ -1,4 +1,4 @@
-@page "/songs"
+@page "/music"
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
 
@@ -42,7 +42,7 @@
                     ShowControls
                     OnNewRating="newRating => UpdateRating(userTrack, newRating)"
                     OnDelete="() => DeleteItem(userTrack)"
-                    OnClick='() => Navigation.NavigateTo($"/songs/song/{track.Id}")'
+                    OnClick='() => Navigation.NavigateTo($"/music/song/{track.Id}")'
                 />
             }
         </div>
@@ -66,7 +66,7 @@
                     ShowControls
                     OnNewRating="@(newRating => UpdateRating(userAlbum, newRating))"
                     OnDelete="() => DeleteItem(userAlbum)"
-                    OnClick='() => Navigation.NavigateTo($"/songs/album/{album.Id}")'
+                    OnClick='() => Navigation.NavigateTo($"/music/album/{album.Id}")'
                 />
             }
         </div>
@@ -89,7 +89,7 @@
                     ShowControls
                     OnNewRating="newRating => UpdateRating(userArtist, newRating)"
                     OnDelete="() => DeleteItem(userArtist)"
-                    OnClick='()=>Navigation.NavigateTo($"/songs/artist/{artist.Id}")'
+                    OnClick='()=>Navigation.NavigateTo($"/music/artist/{artist.Id}")'
                 />
             }
         </div>

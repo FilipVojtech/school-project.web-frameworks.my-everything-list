@@ -8,7 +8,7 @@ namespace My_Everything_List.Services.LastfmService;
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
 [XmlRoot(Namespace = "", IsNullable = false, ElementName = "results")]
-public class SongsSearchResults
+public class TracksSearchResults
 {
     private SongQuery queryField;
 

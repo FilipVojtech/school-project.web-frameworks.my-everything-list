@@ -1,6 +1,7 @@
 using System.Net;
 using System.Xml;
 using System.Xml.Serialization;
+using My_Everything_List.Models;
 using RestSharp;
 
 namespace My_Everything_List.Services.LastfmService;
@@ -87,6 +88,29 @@ public class LastfmService : ILastfmService
         }
     }
 
+    public async Task<LfmArtist?> GetArtist(Artist artist)
+    {
+        List<KeyValuePair<string, string>> parameters = [];
+
+        if (artist.Mbid is not null) parameters.Add(new("mbid", artist.Mbid.ToString()));
+        else parameters.Add(new("artist", artist.Name));
+
+        var result = await _client.ExecuteAsync(BuildRequest(LastfmMethods.GetArtist, parameters));
+
+        if (result.StatusCode != HttpStatusCode.OK || result.Content == null)
+        {
+            return null;
+        }
+
+        var serializer = new XmlSerializer(typeof(LfmForArtist));
+
+        using (StringReader sr = new(result.Content))
+        {
+            var deserialized = (LfmForArtist?)serializer.Deserialize(sr);
+            return deserialized?.artist;
+        }
+    }
+
     public async Task<AlbumsSearchResults?> SearchAlbums(string album)
     {
         var parameters = new List<KeyValuePair<string, string>>
@@ -114,7 +138,34 @@ public class LastfmService : ILastfmService
         }
     }
 
-    public async Task<SongsSearchResults?> SearchSongs(string song)
+    public async Task<LfmAlbum?> GetAlbum(Album album)
+    {
+        List<KeyValuePair<string, string>> parameters = [];
+
+        if (album.Mbid is not null) parameters.Add(new("mbid", album.Mbid.ToString()));
+        else
+        {
+            parameters.Add(new("artist", album.Artist));
+            parameters.Add(new("album", album.Name));
+        }
+
+        var result = await _client.ExecuteAsync(BuildRequest(LastfmMethods.GetAlbum, parameters));
+
+        if (result.StatusCode != HttpStatusCode.OK || result.Content == null)
+        {
+            return null;
+        }
+
+        var serializer = new XmlSerializer(typeof(LfmForAlbum));
+
+        using (StringReader sr = new(result.Content))
+        {
+            var deserialized = (LfmForAlbum?)serializer.Deserialize(sr);
+            return deserialized?.album;
+        }
+    }
+
+    public async Task<TracksSearchResults?> SearchSongs(string song)
     {
         var parameters = new List<KeyValuePair<string, string>>
         {
@@ -132,12 +183,39 @@ public class LastfmService : ILastfmService
 
         if (string.IsNullOrWhiteSpace(content)) return null;
 
-        var serializer = new XmlSerializer(typeof(SongsSearchResults));
+        var serializer = new XmlSerializer(typeof(TracksSearchResults));
 
         using (StringReader sr = new(content))
         {
-            var deserialized = (SongsSearchResults?)serializer.Deserialize(sr);
+            var deserialized = (TracksSearchResults?)serializer.Deserialize(sr);
             return deserialized;
+        }
+    }
+
+    public async Task<LfmTrack?> GetSong(Song song)
+    {
+        List<KeyValuePair<string, string>> parameters = [];
+
+        if (song.Mbid is not null) parameters.Add(new("mbid", song.Mbid.ToString()));
+        else
+        {
+            parameters.Add(new("artist", song.Artist));
+            parameters.Add(new("track", song.Name));
+        }
+
+        var result = await _client.ExecuteAsync(BuildRequest(LastfmMethods.GetTrack, parameters));
+
+        if (result.StatusCode != HttpStatusCode.OK || result.Content == null)
+        {
+            return null;
+        }
+
+        var serializer = new XmlSerializer(typeof(LfmForTrack));
+
+        using (StringReader sr = new(result.Content))
+        {
+            var deserialized = (LfmForTrack?)serializer.Deserialize(sr);
+            return deserialized?.track;
         }
     }
 }

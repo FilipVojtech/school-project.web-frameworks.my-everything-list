@@ -1,0 +1,71 @@
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
+@using My_Everything_List.Services.LastfmService
+@using My_Everything_List.Services.UserService
+
+@page "/music/song/{SongId:int}"
+
+@inject MyEverythingListContext Context
+@inject IUserService UserService
+@inject NavigationManager Navigation
+@inject ILastfmService Lastfm
+
+<PageTitle>@(_track?.name ?? "Music page")</PageTitle>
+
+@if (_track is not null)
+{
+    var truncateLength = $" <a href=\"{_track.url}\">Read more on Last.fm</a>".Length;
+
+    <div class="music-details d-flex flex-row p-4 rounded-4 align-items-center">
+        <img class="poster me-4 rounded-2" src="@songImage" alt="@_track.name cover art">
+        <div class="d-flex flex-column">
+            <div class="music-text px-2 py-3 rounded-3 mb-4">
+                <h3>@_track.name</h3>
+                <div class="music-info mb-3 d-flex gap-2">
+                    <div>@_track.artist.name</div>
+                    &bull;
+                    <div>@(DateTime.Parse(_track.wiki.published).ToShortDateString())</div>
+                </div>
+
+                <h4>About</h4>
+                <p>@_track.wiki.summary[..^truncateLength]</p>
+            </div>
+            <a href="@_track.url" target="_blank" class="align-self-end">
+                <Button Type="ButtonType.Button" Color="ButtonColor.Info" Class="px-3">
+                    View on Last.fm
+                    <Icon Class="ms-2" Name="IconName.BoxArrowUpRight"/>
+                </Button>
+            </a>
+        </div>
+    </div>
+    <p class="text-end mt-2">Data provided by <a href="https://www.last.fm" target="_blank">Last.fm</a></p>
+}
+
+@code {
+    [Parameter] public int SongId { get; set; }
+    private User _currentUser;
+    private LfmTrack? _track;
+    private string? songImage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserService.GetUser();
+
+        if (user is null) Navigation.NavigateTo("/music");
+        else
+            _currentUser = Context.User
+                .Include(u => u.SavedMusic)
+                .Include(u => u.UsersMusic)
+                .First(u => u == user);
+
+        var song = (Song)_currentUser.SavedMusic.First(sm => sm.Id == SongId);
+
+        songImage = song.Image;
+
+        _track = await Lastfm.GetSong(song);
+
+        await base.OnInitializedAsync();
+    }
+
+}
