@@ -17,6 +17,18 @@ public interface ITmdbService
     Task<FilmSearchResult?> SearchFilm(string query);
 
     /// <summary>
+    /// Get list of upcoming films
+    /// </summary>
+    /// <returns></returns>
+    Task<object> GetUpcoming();
+
+    /// <summary>
+    /// Get list of popular films
+    /// </summary>
+    /// <returns></returns>
+    Task<object> GetPopular();
+
+    /// <summary>
     /// Constructs full URL to a film image from TMDB
     /// </summary>
     /// <param name="filePath">The original file path included in the film details</param>
