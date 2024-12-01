@@ -1,7 +1,21 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
 
 <PageTitle>MEL: MyEverythingList</PageTitle>
 
-<h1>Hello, world!</h1>
+@code {
+    [CascadingParameter] HttpContext HttpContext { get; set; } = default!;
 
-Welcome to your new app.
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+
+        if (isAuthenticated)
+        {
+            Navigation.NavigateTo("/films");
+        }
+    }
+
+}
