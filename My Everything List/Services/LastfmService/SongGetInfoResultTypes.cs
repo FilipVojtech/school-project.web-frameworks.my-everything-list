@@ -1,13 +1,14 @@
-﻿namespace My_Everything_List.Services.LastfmService;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
+namespace My_Everything_List.Services.LastfmService;
 
-// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-public partial class lfm
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+[XmlRoot(Namespace = "", IsNullable = false)]
+public class lfm
 {
 
     private lfmTrack trackField;
@@ -17,36 +18,24 @@ public partial class lfm
     /// <remarks/>
     public lfmTrack track
     {
-        get
-        {
-            return this.trackField;
-        }
-        set
-        {
-            this.trackField = value;
-        }
+        get => trackField;
+        set => trackField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [XmlAttribute]
     public string status
     {
-        get
-        {
-            return this.statusField;
-        }
-        set
-        {
-            this.statusField = value;
-        }
+        get => statusField;
+        set => statusField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class lfmTrack
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class lfmTrack
 {
 
     private string nameField;
@@ -70,127 +59,73 @@ public partial class lfmTrack
     /// <remarks/>
     public string name
     {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
+        get => nameField;
+        set => nameField = value;
     }
 
     /// <remarks/>
     public string url
     {
-        get
-        {
-            return this.urlField;
-        }
-        set
-        {
-            this.urlField = value;
-        }
+        get => urlField;
+        set => urlField = value;
     }
 
     /// <remarks/>
     public byte duration
     {
-        get
-        {
-            return this.durationField;
-        }
-        set
-        {
-            this.durationField = value;
-        }
+        get => durationField;
+        set => durationField = value;
     }
 
     /// <remarks/>
     public lfmTrackStreamable streamable
     {
-        get
-        {
-            return this.streamableField;
-        }
-        set
-        {
-            this.streamableField = value;
-        }
+        get => streamableField;
+        set => streamableField = value;
     }
 
     /// <remarks/>
     public uint listeners
     {
-        get
-        {
-            return this.listenersField;
-        }
-        set
-        {
-            this.listenersField = value;
-        }
+        get => listenersField;
+        set => listenersField = value;
     }
 
     /// <remarks/>
     public uint playcount
     {
-        get
-        {
-            return this.playcountField;
-        }
-        set
-        {
-            this.playcountField = value;
-        }
+        get => playcountField;
+        set => playcountField = value;
     }
 
     /// <remarks/>
     public lfmTrackArtist artist
     {
-        get
-        {
-            return this.artistField;
-        }
-        set
-        {
-            this.artistField = value;
-        }
+        get => artistField;
+        set => artistField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlArrayItemAttribute("tag", IsNullable = false)]
+    [XmlArrayItem("tag", IsNullable = false)]
     public lfmTrackTag[] toptags
     {
-        get
-        {
-            return this.toptagsField;
-        }
-        set
-        {
-            this.toptagsField = value;
-        }
+        get => toptagsField;
+        set => toptagsField = value;
     }
 
     /// <remarks/>
     public lfmTrackWiki wiki
     {
-        get
-        {
-            return this.wikiField;
-        }
-        set
-        {
-            this.wikiField = value;
-        }
+        get => wikiField;
+        set => wikiField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class lfmTrackStreamable
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class lfmTrackStreamable
 {
 
     private byte fulltrackField;
@@ -198,39 +133,27 @@ public partial class lfmTrackStreamable
     private byte valueField;
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [XmlAttribute]
     public byte fulltrack
     {
-        get
-        {
-            return this.fulltrackField;
-        }
-        set
-        {
-            this.fulltrackField = value;
-        }
+        get => fulltrackField;
+        set => fulltrackField = value;
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
+    [XmlText]
     public byte Value
     {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
-        }
+        get => valueField;
+        set => valueField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class lfmTrackArtist
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class lfmTrackArtist
 {
 
     private string nameField;
@@ -242,48 +165,30 @@ public partial class lfmTrackArtist
     /// <remarks/>
     public string name
     {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
+        get => nameField;
+        set => nameField = value;
     }
 
     /// <remarks/>
     public string mbid
     {
-        get
-        {
-            return this.mbidField;
-        }
-        set
-        {
-            this.mbidField = value;
-        }
+        get => mbidField;
+        set => mbidField = value;
     }
 
     /// <remarks/>
     public string url
     {
-        get
-        {
-            return this.urlField;
-        }
-        set
-        {
-            this.urlField = value;
-        }
+        get => urlField;
+        set => urlField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class lfmTrackTag
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class lfmTrackTag
 {
 
     private string nameField;
@@ -293,35 +198,23 @@ public partial class lfmTrackTag
     /// <remarks/>
     public string name
     {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
+        get => nameField;
+        set => nameField = value;
     }
 
     /// <remarks/>
     public string url
     {
-        get
-        {
-            return this.urlField;
-        }
-        set
-        {
-            this.urlField = value;
-        }
+        get => urlField;
+        set => urlField = value;
     }
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class lfmTrackWiki
+[Serializable]
+[DesignerCategory("code")]
+[XmlType(AnonymousType = true)]
+public class lfmTrackWiki
 {
 
     private string publishedField;
@@ -333,40 +226,22 @@ public partial class lfmTrackWiki
     /// <remarks/>
     public string published
     {
-        get
-        {
-            return this.publishedField;
-        }
-        set
-        {
-            this.publishedField = value;
-        }
+        get => publishedField;
+        set => publishedField = value;
     }
 
     /// <remarks/>
     public string summary
     {
-        get
-        {
-            return this.summaryField;
-        }
-        set
-        {
-            this.summaryField = value;
-        }
+        get => summaryField;
+        set => summaryField = value;
     }
 
     /// <remarks/>
     public string content
     {
-        get
-        {
-            return this.contentField;
-        }
-        set
-        {
-            this.contentField = value;
-        }
+        get => contentField;
+        set => contentField = value;
     }
 }
 
