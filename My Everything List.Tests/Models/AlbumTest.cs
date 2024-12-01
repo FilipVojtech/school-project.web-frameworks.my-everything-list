@@ -13,7 +13,7 @@ public class AlbumTest
         Album album1 = new Album("Album1", "/img1.jpg", "Artist1");
         object album2 = new Album("Album1", "/img2.jpg", "Artist1");
 
-        Assert.That(album1.Equals(album2), Is.True);
+        Assert.That(album1 == (Album)album2, Is.True);
     }
 
     [Test(Description = "Albums not equal when at least one of their properties is different")]
@@ -22,6 +22,15 @@ public class AlbumTest
         Album album1 = new Album("Album1", "/img1.jpg", "Artist1");
         object album2 = new Album("Album1", "/img1.jpg", "Artist2");
 
-        Assert.That(album1.Equals(album2), Is.False);
+        Assert.That(album1 == (Album)album2, Is.False);
+    }
+
+    [Test]
+    public void NotEquals_Null()
+    {
+        Album album = new Album("Album1", "/img1.jpg", "Artist1");
+        object album2 = null;
+
+        Assert.That(album == (Album)album2, Is.False);
     }
 }
