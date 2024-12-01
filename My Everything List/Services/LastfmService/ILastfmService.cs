@@ -9,4 +9,5 @@ public interface ILastfmService
     Task<AlbumsSearchResults?> SearchAlbums(string album);
     Task<LfmAlbum?> GetAlbum(Album album);
     Task<TracksSearchResults?> SearchSongs(string song);
+    Task<LfmTrack?> GetSong(Song song);
 }

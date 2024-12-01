@@ -191,4 +191,31 @@ public class LastfmService : ILastfmService
             return deserialized;
         }
     }
+
+    public async Task<LfmTrack?> GetSong(Song song)
+    {
+        List<KeyValuePair<string, string>> parameters = [];
+
+        if (song.Mbid is not null) parameters.Add(new("mbid", song.Mbid.ToString()));
+        else
+        {
+            parameters.Add(new("artist", song.Artist));
+            parameters.Add(new("album", song.Name));
+        }
+
+        var result = await _client.ExecuteAsync(BuildRequest(LastfmMethods.GetTrack, parameters));
+
+        if (result.StatusCode != HttpStatusCode.OK || result.Content == null)
+        {
+            return null;
+        }
+
+        var serializer = new XmlSerializer(typeof(LfmForTrack));
+
+        using (StringReader sr = new(result.Content))
+        {
+            var deserialized = (LfmForTrack?)serializer.Deserialize(sr);
+            return deserialized?.track;
+        }
+    }
 }
