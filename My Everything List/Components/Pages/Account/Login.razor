@@ -14,17 +14,17 @@
 <PageTitle>Login</PageTitle>
 
 <div>
-    <h3 class="text-center">Login</h3>
+    <h3 class="text-center mb-3">Login</h3>
 
     <EditForm Model="Model" OnValidSubmit="Authenticate" FormName="LoginForm">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <InputText id="email" @bind-Value="Model.Email" type="email" class="form-control" placeholder=""/>
             <label for="email">Email</label>
             <ValidationMessage For="() => Model.Email" class="text-danger"/>
         </div>
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <InputText id="password" @bind-Value="Model.Password" type="password" class="form-control" placeholder=""/>
             <label for="password">Password</label>
             <ValidationMessage For="() => Model.Password" class="text-danger"/>
