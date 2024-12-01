@@ -88,7 +88,7 @@ public class LastfmService : ILastfmService
         }
     }
 
-    public async Task<lfmArtist?> GetArtist(Artist artist)
+    public async Task<LfmArtist?> GetArtist(Artist artist)
     {
         List<KeyValuePair<string, string>> parameters = [];
 
@@ -102,11 +102,11 @@ public class LastfmService : ILastfmService
             return null;
         }
 
-        var serializer = new XmlSerializer(typeof(lfm));
+        var serializer = new XmlSerializer(typeof(LfmForArtist));
 
         using (StringReader sr = new(result.Content))
         {
-            var deserialized = (lfm?)serializer.Deserialize(sr);
+            var deserialized = (LfmForArtist?)serializer.Deserialize(sr);
             return deserialized?.artist;
         }
     }
