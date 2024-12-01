@@ -78,6 +78,16 @@ public class TmdbService : ITmdbService
         return films;
     }
 
+    public Task<object> GetUpcoming()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<object> GetPopular()
+    {
+        throw new NotImplementedException();
+    }
+
     /// <inheritdoc cref="ITmdbService.ConstructImageUrl"/>
     public string ConstructImageUrl(string filePath)
     {
