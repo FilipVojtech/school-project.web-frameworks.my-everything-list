@@ -96,6 +96,11 @@
     </div>
 }
 
+@if (_currentUser.UsersMusic.Count == 0)
+{
+    <p>You don't have any music saved in your library</p>
+}
+
 @code {
     private User _currentUser;
 

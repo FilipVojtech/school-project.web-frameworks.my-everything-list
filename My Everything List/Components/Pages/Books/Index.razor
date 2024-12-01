@@ -19,26 +19,33 @@
     <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
 </div>
 
-<div class="item-grid">
-    @foreach (var userBook in _currentUser.UsersBooks)
-    {
-        var book = userBook.Book;
+@if (_currentUser.UsersBooks.Count > 0)
+{
+    <div class="item-grid">
+        @foreach (var userBook in _currentUser.UsersBooks)
+        {
+            var book = userBook.Book;
 
-        <BookItem
-            Id="@book.Id.ToString()"
-            Title="@book.Title"
-            Authors="@book.Authors"
-            Description="@book.Description"
-            Image="@book.Image"
-            Isbn="@book.Isbn"
-            Rating="userBook.Rating"
-            ShowControls
-            OnNewRating="newRating => UpdateRating(userBook, newRating)"
-            OnDelete="() => DeleteItem(userBook)"
-            OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
-        />
-    }
-</div>
+            <BookItem
+                Id="@book.Id.ToString()"
+                Title="@book.Title"
+                Authors="@book.Authors"
+                Description="@book.Description"
+                Image="@book.Image"
+                Isbn="@book.Isbn"
+                Rating="userBook.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userBook, newRating)"
+                OnDelete="() => DeleteItem(userBook)"
+                OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
+            />
+        }
+    </div>
+}
+else
+{
+    <p>You don't have any books saved in your library</p>
+}
 
 @code {
     private User _currentUser = default!;

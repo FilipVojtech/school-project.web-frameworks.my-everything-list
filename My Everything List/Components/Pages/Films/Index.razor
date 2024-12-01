@@ -19,26 +19,32 @@
     <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
 </div>
 
-<div class="item-grid">
-    @foreach (var userFilm in _currentUser.UsersFilms)
-    {
-        var film = userFilm.Film;
+@if (_currentUser.UsersFilms.Count > 0)
+{
+    <div class="item-grid">
+        @foreach (var userFilm in _currentUser.UsersFilms)
+        {
+            var film = userFilm.Film;
 
-        <FilmItem
-            Id="film.Id"
-            Title="@film.Title"
-            Description="@film.Description"
-            Genres="@film.Genres"
-            Image="@film.Image"
-            ReleaseDate="@film.ReleaseDate"
-            Rating="userFilm.Rating"
-            ShowControls
-            OnNewRating="newRating => UpdateRating(userFilm, newRating)"
-            OnDelete="() => DeleteItem(userFilm)"
-            OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'
-        />
-    }
-</div>
+            <FilmItem
+                Id="film.Id"
+                Title="@film.Title"
+                Description="@film.Description"
+                Genres="@film.Genres"
+                Image="@film.Image"
+                ReleaseDate="@film.ReleaseDate"
+                Rating="userFilm.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userFilm, newRating)"
+                OnDelete="() => DeleteItem(userFilm)"
+                OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'/>
+        }
+    </div>
+}
+else
+{
+    <p>You don't have any films saved in your library</p>
+}
 
 @code {
     private User _currentUser;
