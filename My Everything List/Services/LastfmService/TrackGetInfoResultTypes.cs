@@ -7,16 +7,16 @@ namespace My_Everything_List.Services.LastfmService;
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-[XmlRoot(Namespace = "", IsNullable = false)]
-public class lfm
+[XmlRoot("lfm", Namespace = "", IsNullable = false)]
+public class LfmForTrack
 {
 
-    private lfmTrack trackField;
+    private LfmTrack trackField;
 
     private string statusField;
 
     /// <remarks/>
-    public lfmTrack track
+    public LfmTrack track
     {
         get => trackField;
         set => trackField = value;
@@ -35,7 +35,7 @@ public class lfm
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true)]
-public class lfmTrack
+public class LfmTrack
 {
 
     private string nameField;
