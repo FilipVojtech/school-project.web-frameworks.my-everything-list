@@ -1,0 +1,79 @@
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
+@using My_Everything_List.Services.GoogleBooksService
+@using My_Everything_List.Services.UserService
+
+@page "/books/book/{BookId:int}"
+
+@inject MyEverythingListContext Context
+@inject IUserService UserService
+@inject NavigationManager Navigation
+@inject IGoogleBooksService BookService
+
+<PageTitle>@(_volume?.volumeInfo.title ?? "Book page")</PageTitle>
+
+@if (_volume is not null)
+{
+    var book = _volume.volumeInfo;
+    var authors = string.Empty;
+
+    foreach (var author in book.authors)
+    {
+        authors += $"{author}, ";
+    }
+
+    var bookImage = book.imageLinks.small ?? book.imageLinks.thumbnail;
+
+    <div class="book-details d-flex flex-column flex-md-row p-4 rounded-4 align-items-center">
+        <img class="poster me-md-4 mb-4 mb-md-0 rounded-2" src="@bookImage" alt="@book.title book cover">
+
+        <div class="d-flex flex-column">
+            <div class="book-text px-2 py-3 rounded-3 mb-4">
+                <h3>@(book.title)</h3>
+                <div class="book-info mb-3 d-flex gap-2">
+                    <div>@(DateOnly.Parse(book.publishedDate))</div>
+                    &bull;
+                    <div>@book.industryIdentifiers.First().identifier</div>
+                    &bull;
+                    <div>@authors[..^2]</div>
+                </div>
+
+                <h4>About</h4>
+                <p>@((MarkupString)book.description)</p>
+            </div>
+            <a href="@book.infoLink" target="_blank" class="align-self-end">
+                <Button Type="ButtonType.Button" Color="ButtonColor.Info" Class="px-3">
+                    View on Google Books
+                    <Icon Class="ms-2" Name="IconName.BoxArrowUpRight"/>
+                </Button>
+            </a>
+        </div>
+
+    </div>
+    <p class="text-end mt-2">Data provided by <a href="https://books.google.com/" target="_blank">Google Books</a></p>
+}
+
+@code {
+    [Parameter] public int BookId { get; set; }
+    private User _currentUser;
+    private Volume? _volume;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserService.GetUser();
+
+        if (user is null) Navigation.NavigateTo("/books");
+        else
+            _currentUser = Context.User
+                .Include(u => u.SavedBooks)
+                .First(u => u == user);
+
+        var book = _currentUser.UsersBooks.First(ub => ub.BookId == BookId);
+
+        _volume = await BookService.GetBook(book.Book.GoogleBooksId);
+
+        await base.OnInitializedAsync();
+    }
+
+}

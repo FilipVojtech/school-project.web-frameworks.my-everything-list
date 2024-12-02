@@ -1,6 +1,7 @@
 using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using My_Everything_List.Models;
 using My_Everything_List.Services.GoogleBooksService;
 
 namespace My_Everything_List.Components.Pages.Books;
@@ -10,7 +11,7 @@ public partial class SearchBookModal
     [Inject] private IGoogleBooksService BooksService { get; set; } = default!;
 
     [Parameter] public required string ButtonTitle { get; set; }
-    [Parameter] public required EventHandler<Volume> OnItemSelected { get; set; }
+    [Parameter] public required EventHandler<Book> OnItemSelected { get; set; }
     private string? Query { get; set; } = string.Empty;
     private Modal _modal = default!;
     private bool _searching = false;
@@ -61,7 +62,8 @@ public partial class SearchBookModal
 
     private void OnBookClick(MouseEventArgs args, Volume book)
     {
-        OnItemSelected(null, book);
+        var bookInfo = book.volumeInfo;
+        OnItemSelected(null, new Book(book));
         Query = string.Empty;
         _books = null;
         _modal.HideAsync();

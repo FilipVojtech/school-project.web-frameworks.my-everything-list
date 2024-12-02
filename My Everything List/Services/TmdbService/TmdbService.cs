@@ -47,7 +47,8 @@ public class TmdbService : ITmdbService
     /// <inheritdoc cref="ITmdbService.GetFilm"/>
     public async Task<Film?> GetFilm(int id)
     {
-        var result = await _client.ExecuteAsync(BuildRequest(TmdbEndpoint.GetFilm(id)));
+        List<KeyValuePair<string, string>> parms = [new("append_to_response", "credits")];
+        var result = await _client.ExecuteAsync(BuildRequest(TmdbEndpoint.GetFilm(id), parms));
 
         if (result.StatusCode != HttpStatusCode.OK || result.Content == null)
         {

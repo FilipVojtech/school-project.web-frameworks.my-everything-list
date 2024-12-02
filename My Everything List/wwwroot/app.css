@@ -45,3 +45,47 @@ h1:focus {
 .interactive:hover {
     background-color: #e4e4e4;
 }
+
+.item-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0.5rem;
+}
+
+.item-description {
+    display: inline-block;
+    max-height: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 991.98px) {
+    .item-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/*** Navbar ***/
+.navbar {
+    background: linear-gradient(0.25turn, hsla(212, 84%, 71%, 0.66) 66%, #b9d661);
+    backdrop-filter: blur(33px) contrast(1);
+}
+
+.nav-item .nav-link {
+    font-weight: 600;
+}
+
+.nav-link.active {
+    font-weight: 800;
+}
+
+/*** Form page ***/
+.form-page {
+    width: 50%;
+}
+
+@media (max-width: 767.98px) {
+    .form-page {
+        width: 100%;
+    }
+}

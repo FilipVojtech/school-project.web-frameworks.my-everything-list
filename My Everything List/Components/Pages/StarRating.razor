@@ -1,0 +1,44 @@
+@rendermode InteractiveServer
+
+<div class="d-flex flex-row gap-1">
+    @for (var i = 0; i < 5; i++)
+    {
+        var newValue = i + 1;
+        if (i < Value)
+        {
+            <span class="star">
+            <Icon
+                Class="cursor-pointer"
+                Name="IconName.StarFill"
+                Color="IconColor.Warning"
+                Size="IconSize.x4"
+                @onclick="() => OnStarClick(newValue)"
+            />
+        </span>
+        }
+        else
+        {
+            <span class="star">
+            <Icon
+                Class="cursor-pointer"
+                Name="IconName.Star"
+                Color="IconColor.Warning"
+                Size="IconSize.x4"
+                @onclick="() => OnStarClick(newValue)"
+            />
+        </span>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public required int Value { get; set; }
+    [Parameter] public required EventCallback<int> OnChange { get; set; }
+
+    private async Task OnStarClick(int newValue)
+    {
+        await OnChange.InvokeAsync(newValue);
+        Value = newValue;
+    }
+
+}

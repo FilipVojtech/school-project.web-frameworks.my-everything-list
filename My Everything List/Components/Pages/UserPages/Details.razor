@@ -1,13 +1,13 @@
-﻿@page "/users/details"
+﻿@page "/admin/users/details"
 @attribute [Authorize(Roles = "Admin")]
+
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
+@inject NavigationManager NavigationManager
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using My_Everything_List.Data
 @using My_Everything_List.Models
-
-@inject IDbContextFactory<MyEverythingListContext> DbFactory
-@inject NavigationManager NavigationManager
 
 <PageTitle>Details</PageTitle>
 
@@ -31,8 +31,8 @@
             <dd class="col-sm-10">@user.Role</dd>
         </dl>
         <div>
-            <a href="@($"/users/edit?id={user.Id}")">Edit</a> |
-            <a href="@($"/users")">Back to List</a>
+            <a href="@($"/admin/users/edit?id={user.Id}")">Edit</a> |
+            <a href="@($"/admin/users")">Back to List</a>
         </div>
     }
 </div>

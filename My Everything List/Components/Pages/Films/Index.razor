@@ -2,28 +2,89 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
 
-@using Microsoft.AspNetCore.Authorization
-@using My_Everything_List.Services.TmdbService
+@inject NavigationManager Navigation
+@inject MyEverythingListContext Context
+@inject IUserService User
 
-<div class="container-fluid d-flex justify-content-between">
-    <h3>Films</h3>
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
+@using My_Everything_List.Services.UserService
+
+<PageTitle>Your Films</PageTitle>
+
+<div class="container-fluid d-flex justify-content-between mb-3">
+    <h3 class="m-0">Films</h3>
     <SearchMovieModal ButtonTitle="Add Film" OnItemSelected="OnItemSelected"/>
 </div>
 
-<ul>
-    @foreach (var film in _films)
-    {
-        <li>@film.title</li>
-    }
-</ul>
+@if (_currentUser.UsersFilms.Count > 0)
+{
+    <div class="item-grid">
+        @foreach (var userFilm in _currentUser.UsersFilms)
+        {
+            var film = userFilm.Film;
+
+            <FilmItem
+                Id="film.Id"
+                Title="@film.Title"
+                Description="@film.Description"
+                Genres="@film.Genres"
+                Image="@film.Image"
+                ReleaseDate="@film.ReleaseDate"
+                Rating="userFilm.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userFilm, newRating)"
+                OnDelete="() => DeleteItem(userFilm)"
+                OnClick='() => Navigation.NavigateTo($"/films/film/{film.Id}")'/>
+        }
+    </div>
+}
+else
+{
+    <p>You don't have any films saved in your library</p>
+}
 
 @code {
-    private List<Film> _films = [];
+    private User _currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await User.GetUser();
+
+        if (user is null) Navigation.NavigateTo("/");
+        else
+            _currentUser = Context.User
+                .Include(u => u.UsersFilms)
+                .Include(u => u.SavedFilms)
+                .First(u => u == user);
+
+        await base.OnInitializedAsync();
+    }
 
     private void OnItemSelected(object? sender, Film film)
     {
-        _films.Add(film);
+        // TODO: Move logic to FilmService
+        var filmInDb = Context.Film.FirstOrDefault(f => f == film)
+                       ?? Context.Film.Add(film).Entity;
+
+        if (_currentUser.SavedFilms.Contains(filmInDb)) return;
+        _currentUser.SavedFilms.Add(filmInDb);
+        Context.SaveChanges();
         StateHasChanged();
+    }
+
+    private async Task UpdateRating(UsersFilms usersFilmItem, int newRating)
+    {
+        Context.Update(usersFilmItem).Entity.Rating = newRating;
+        await Context.SaveChangesAsync();
+    }
+
+    private async Task DeleteItem(UsersFilms usersFilmItem)
+    {
+        Context.UsersFilms.Remove(usersFilmItem);
+        await Context.SaveChangesAsync();
     }
 
 }

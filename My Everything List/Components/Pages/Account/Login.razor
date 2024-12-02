@@ -3,26 +3,28 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.EntityFrameworkCore
 @using My_Everything_List.Data
 @using My_Everything_List.Models.ViewModels
 
-@inject MyEverythingListContext DbContext
+@inject IDbContextFactory<MyEverythingListContext> DbFactory
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
 
-<div>
-    <h3 class="text-center">Login</h3>
+<div class="form-page m-auto">
+    <h3 class="text-center mb-3">Login</h3>
 
     <EditForm Model="Model" OnValidSubmit="Authenticate" FormName="LoginForm">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <InputText id="email" @bind-Value="Model.Email" type="email" class="form-control" placeholder=""/>
             <label for="email">Email</label>
             <ValidationMessage For="() => Model.Email" class="text-danger"/>
         </div>
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <InputText id="password" @bind-Value="Model.Password" type="password" class="form-control" placeholder=""/>
             <label for="password">Password</label>
             <ValidationMessage For="() => Model.Password" class="text-danger"/>
@@ -43,10 +45,20 @@
 
     private string? _errorMessage = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated ?? true)
+        {
+            Navigation.NavigateTo("/", replace: true);
+        }
+    }
+
     private async Task Authenticate()
     {
-        var userAccount = DbContext.User.FirstOrDefault(user => user.Email == Model.Email);
-        if (userAccount == null || userAccount.Password != Model.Password)
+        await using var context = await DbFactory.CreateDbContextAsync();
+        var userAccount = context.User.FirstOrDefault(user => user.Email == Model.Email);
+        if (userAccount is null || userAccount.Password != Model.Password)
         {
             _errorMessage = "Incorrect credentials.";
             return;
@@ -55,8 +67,8 @@
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, userAccount.Id.ToString()),
-            new(ClaimTypes.Email, Model.Email),
-            new(ClaimTypes.Role, userAccount.Role)
+            new(ClaimTypes.Email, userAccount.Email!),
+            new(ClaimTypes.Role, userAccount.Role!)
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

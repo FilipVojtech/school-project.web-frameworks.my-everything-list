@@ -2,28 +2,95 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin,User")]
 
-@using Microsoft.AspNetCore.Authorization
-@using My_Everything_List.Services.GoogleBooksService
+@inject NavigationManager Navigation
+@inject MyEverythingListContext Context
+@inject IUserService User
 
-<div class="container-fluid d-flex justify-content-between">
-    <h3>Books</h3>
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using My_Everything_List.Data
+@using My_Everything_List.Models
+@using My_Everything_List.Services.UserService
+
+<PageTitle>Your Books</PageTitle>
+
+<div class="container-fluid d-flex justify-content-between mb-3">
+    <h3 class="m-0">Books</h3>
     <SearchBookModal ButtonTitle="Add Book" OnItemSelected="OnItemSelected"/>
 </div>
 
-<ul>
-    @foreach (var book in _books)
-    {
-        <li>@book.volumeInfo.title</li>
-    }
-</ul>
+@if (_currentUser.UsersBooks.Count > 0)
+{
+    <div class="item-grid">
+        @foreach (var userBook in _currentUser.UsersBooks)
+        {
+            var book = userBook.Book;
+
+            <BookItem
+                Id="@book.Id.ToString()"
+                Title="@book.Title"
+                Authors="@book.Authors"
+                Description="@book.Description"
+                Image="@book.Image"
+                Isbn="@book.Isbn"
+                Rating="userBook.Rating"
+                ShowControls
+                OnNewRating="newRating => UpdateRating(userBook, newRating)"
+                OnDelete="() => DeleteItem(userBook)"
+                OnClick='_ => Navigation.NavigateTo($"/books/book/{book.Id}")'
+            />
+        }
+    </div>
+}
+else
+{
+    <p>You don't have any books saved in your library</p>
+}
 
 @code {
-    private List<Volume> _books = [];
+    private User _currentUser = default!;
 
-    private void OnItemSelected(object? sender, Volume book)
+    protected override async Task OnInitializedAsync()
     {
-        _books.Add(book);
+        var user = await User.GetUser();
+
+        if (user is null) Navigation.NavigateTo("/");
+        else
+            _currentUser = Context.User
+                .Include(u => u.UsersBooks)
+                .Include(u => u.SavedBooks)
+                .First(u => u == user);
+
+        await base.OnInitializedAsync();
+    }
+
+    private void OnItemSelected(object? sender, Book book)
+    {
+        // TODO: Move logic to BookService
+        // If book is not in DB
+        // Add it
+        var bookInDb = Context.Books.FirstOrDefault(b => b.Isbn == book.Isbn)
+                       ?? Context.Books.Add(book).Entity;
+
+        // Check that it is not already saved by user
+        if (_currentUser.SavedBooks.Contains(bookInDb)) return;
+        // If not, save it to users saved books
+        // Use the entity
+        _currentUser.SavedBooks.Add(bookInDb);
+        Context.SaveChanges();
         StateHasChanged();
+    }
+
+    private async Task UpdateRating(UsersBooks usersBookItem, int newRating)
+    {
+        Context.Update(usersBookItem).Entity.Rating = newRating;
+        await Context.SaveChangesAsync();
+    }
+
+    private async Task DeleteItem(UsersBooks usersBookItem)
+    {
+        Context.UsersBooks.Remove(usersBookItem);
+        await Context.SaveChangesAsync();
     }
 
 }
