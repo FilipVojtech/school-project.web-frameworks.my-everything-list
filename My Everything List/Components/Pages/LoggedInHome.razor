@@ -1,45 +1,58 @@
-@using Microsoft.AspNetCore.Authorization
 @using My_Everything_List.Services.LastfmService
 @using My_Everything_List.Services.TmdbService
+@using My_Everything_List.Components.Pages.Songs
+@using My_Everything_List.Components.Pages.Films
 
 @inject ITmdbService Tmdb
 @inject ILastfmService Lastfm
 
-@attribute [Authorize]
-
-<h3>Top Artists</h3>
-<div class="item-grid">
-    @foreach (var artist in _topArtists)
-    {
-    }
+<div class="d-flex flex-column gap-4">
+    <div>
+        <h3 class="mb-2">Top Artists</h3>
+        <div class="item-grid">
+            @foreach (var artist in _topArtists)
+            {
+                <ArtistItem/>
+            }
+        </div>
+    </div>
+    <div>
+        <h3 class="mb-2">Top Songs</h3>
+        <div class="item-grid">
+            @foreach (var track in _topTracks)
+            {
+                <SongItem/>
+            }
+        </div>
+    </div>
+    <div>
+        <h3 class="mb-2">Popular Films</h3>
+        <div class="item-grid">
+            @foreach (var film in _popularFilms)
+            {
+                <FilmItem/>
+            }
+        </div>
+    </div>
+    <div>
+        <h3 class="mb-2">Upcoming Films</h3>
+        <div class="item-grid">
+            @foreach (var film in _upcomingFilms)
+            {
+                <FilmItem/>
+            }
+        </div>
+    </div>
 </div>
 
-<h3>Top Songs</h3>
-<div class="item-grid">
-    @foreach (var track in _topTracks)
-    {
-    }
-</div>
 
-<h3>Popular Films</h3>
-<div class="item-grid">
-    @foreach (var film in _popularFilms)
-    {
-    }
-</div>
 
-<h3>Upcoming Films</h3>
-<div class="item-grid">
-    @foreach (var film in _upcomingFilms)
-    {
-    }
-</div>
 
 @code {
-    private List<Film> _upcomingFilms { get; set; }
-    private List<Film> _popularFilms { get; set; }
-    private List<LfmArtist> _topArtists { get; set; }
-    private List<LfmTrack> _topTracks { get; set; }
+    private List<Film> _upcomingFilms { get; set; } = [];
+    private List<Film> _popularFilms { get; set; } = [];
+    private List<LfmArtist> _topArtists { get; set; } = [];
+    private List<LfmTrack> _topTracks { get; set; } = [];
 
     // protected override async Task OnInitializedAsync()
     // {
