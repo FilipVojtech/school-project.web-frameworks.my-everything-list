@@ -78,3 +78,14 @@ h1:focus {
 .nav-link.active {
     font-weight: 800;
 }
+
+/*** Form page ***/
+.form-page {
+    width: 50%;
+}
+
+@media (max-width: 767.98px) {
+    .form-page {
+        width: 100%;
+    }
+}
