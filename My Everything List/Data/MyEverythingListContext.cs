@@ -77,6 +77,10 @@ public class MyEverythingListContext : DbContext
             entity
                 .HasOne(ub => ub.User)
                 .WithMany(u => u.UsersBooks);
+            entity
+                .Property(ub => ub.AddedAt)
+                .HasDefaultValueSql("datetime()")
+                .ValueGeneratedOnAdd();
         });
         // User Films
         modelBuilder.Entity<UsersFilms>(entity =>
@@ -87,6 +91,10 @@ public class MyEverythingListContext : DbContext
             entity
                 .HasOne(uf => uf.User)
                 .WithMany(u => u.UsersFilms);
+            entity
+                .Property(uf => uf.AddedAt)
+                .HasDefaultValueSql("datetime()")
+                .ValueGeneratedOnAdd();
         });
         // User Music
         modelBuilder.Entity<UsersMusic>(entity =>
@@ -97,6 +105,10 @@ public class MyEverythingListContext : DbContext
             entity
                 .HasOne(um => um.User)
                 .WithMany(u => u.UsersMusic);
+            entity
+                .Property(um => um.AddedAt)
+                .HasDefaultValueSql("datetime()")
+                .ValueGeneratedOnAdd();
         });
     }
 }
