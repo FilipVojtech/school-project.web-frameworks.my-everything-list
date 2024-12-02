@@ -19,4 +19,8 @@ public class UsersFilms
     [Range(0, 5)]
     [DefaultValue(0)]
     public int Rating { get; set; } = 0;
+
+    [Column("added_at")]
+    [DataType(DataType.DateTime)]
+    public DateTime AddedAt { get; set; }
 }
