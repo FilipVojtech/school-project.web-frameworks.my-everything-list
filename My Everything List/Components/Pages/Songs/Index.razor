@@ -30,7 +30,7 @@
     <div class="m-1">
         <h3>Songs</h3>
         <div class="item-grid">
-            @foreach (var userTrack in tracks)
+            @foreach (var userTrack in tracks.OrderByDescending(um => um.AddedAt))
             {
                 var track = (Song)userTrack.MusicItem;
                 <SongItem
@@ -54,7 +54,7 @@
     <div class="m-1">
         <h3>Albums</h3>
         <div class="item-grid">
-            @foreach (var userAlbum in albums)
+            @foreach (var userAlbum in albums.OrderByDescending(um => um.AddedAt))
             {
                 var album = (Album)userAlbum.MusicItem;
                 <AlbumItem
@@ -78,7 +78,7 @@
     <div class="m-1">
         <h3>Artists</h3>
         <div class="item-grid">
-            @foreach (var userArtist in artists)
+            @foreach (var userArtist in artists.OrderByDescending(um => um.AddedAt))
             {
                 var artist = (Artist)userArtist.MusicItem;
                 <ArtistItem

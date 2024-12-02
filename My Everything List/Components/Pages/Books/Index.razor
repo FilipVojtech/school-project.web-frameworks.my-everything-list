@@ -22,7 +22,7 @@
 @if (_currentUser.UsersBooks.Count > 0)
 {
     <div class="item-grid">
-        @foreach (var userBook in _currentUser.UsersBooks)
+        @foreach (var userBook in _currentUser.UsersBooks.OrderByDescending(ub => ub.AddedAt))
         {
             var book = userBook.Book;
 

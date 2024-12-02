@@ -22,7 +22,7 @@
 @if (_currentUser.UsersFilms.Count > 0)
 {
     <div class="item-grid">
-        @foreach (var userFilm in _currentUser.UsersFilms)
+        @foreach (var userFilm in _currentUser.UsersFilms.OrderByDescending(uf => uf.AddedAt))
         {
             var film = userFilm.Film;
 
