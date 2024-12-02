@@ -1,4 +1,4 @@
-<header class="sticky-top mb-2">
+<header class="sticky-top mb-3">
     <nav class="navbar navbar-expand-md">
         <div class="container-sm">
             <a
@@ -20,12 +20,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+                    </li>
                     <AuthorizeView>
-                        <NotAuthorized>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
-                            </li>
-                        </NotAuthorized>
                         <Authorized>
                             <li class="nav-item">
                                 <NavLink class="nav-link" href="/films">Films</NavLink>
